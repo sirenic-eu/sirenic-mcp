@@ -75,7 +75,10 @@ cost $0.05 or less.
   date is in the server instructions) and every call is refused until the server answers. Nothing is signed.
 - No file is written, no telemetry is sent. The server identifies itself as `sirenic-mcp-npm/<version>`.
 
-Errors the package returns itself (a closed list, in `structuredContent.resultat.error`): `paiement_requis`,
+Without a rail, a paid tool is not an error: it answers `payment_required: true` in `structuredContent`, with the
+server's `quote`, its `free_tier` offer and a `hint` that starts with `paiement_requis` (`isError` is false).
+
+Errors the package returns itself (a closed list, in `structuredContent.resultat.error`, `isError` true):
 `plafond_depasse`, `paiement_refuse`, `reglement_incertain` (the connection broke after a signed payment was sent:
 nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `trop_de_requetes`,
 `service_injoignable`. Errors of the Sirenic server itself (`amont_indisponible`, `compte_requis`,

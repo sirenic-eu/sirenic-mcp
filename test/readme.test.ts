@@ -2,6 +2,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { routePrices } from "../src/catalogue.js";
+import { ERROR_CODES } from "../src/errors.js";
 import { priceLabel, replaceToolsTable } from "../scripts/tableau-lib.js";
 import { SNAPSHOT } from "./helpers/fixtures.js";
 
@@ -35,6 +36,13 @@ describe("README", () => {
       return routes.some((r) => r.prix_max !== undefined) && !priceLabel(t).includes("up to");
     });
     expect(single.map((t) => t.name)).toEqual([]);
+  });
+
+  it("the closed list of errors in the README is the package's own (ERROR_CODES), and paiement_requis is said apart", () => {
+    const sentence = /Errors the package returns itself \(a closed list[^)]*\):([\s\S]*?)Errors of the Sirenic server/.exec(README)?.[1] ?? "";
+    expect(sentence).not.toBe("");
+    expect([...sentence.matchAll(/`([a-z_]+)`/g)].map((m) => m[1])).toEqual([...ERROR_CODES]);
+    expect(README).toContain("it answers `payment_required: true` in `structuredContent`, with the\nserver's `quote`");
   });
 
   it("no long dash, no secret-looking value, install in one line", () => {
