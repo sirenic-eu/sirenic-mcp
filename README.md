@@ -60,7 +60,8 @@ wallet holding only what you are ready to spend.
 
 A quote above a cap is refused before anything is signed. The tool answers `plafond_depasse` with the quoted price,
 the cap and the variable to raise; the tool list itself is unchanged (tools above the cap stay listed). Most tools
-cost $0.05 or less.
+cost $0.05 or less. The session cap counts the calls in progress too: a price is held against it before the
+signature, so calls sent together never spend more than the cap.
 
 ## How it works
 
