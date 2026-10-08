@@ -15,9 +15,9 @@ Node.js 22 (see `.node-version`). Try your build in an MCP client with `node dis
 
 ## Rules of this repository
 
-- **Tests never open the network.** `test/setup-no-network.ts` refuses every socket; the Sirenic server is simulated
-  by `test/helpers/fake-remote.ts`, with the answers recorded in `test/fixtures/`. A test that needs the real
-  server does not belong here.
+- **Tests never open the network.** `test/setup-no-network.ts` refuses the global fetch, every TCP connection, every
+  DNS query and every UDP socket; the Sirenic server is simulated by `test/helpers/fake-remote.ts`, with the answers
+  recorded in `test/fixtures/`. A test that needs the real server does not belong here.
 - **Tools and prices are never written by hand.** They come from the Sirenic server (`tools/list` and each tool's
   `_meta`). To change a tool, its description or its price, open an issue: it is a change on the server.
 - **The snapshot and the README table are generated.** `npm run instantane` rewrites `catalogue/instantane.json`
