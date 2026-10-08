@@ -65,8 +65,8 @@ cost $0.05 or less.
 ## How it works
 
 - At startup the server reads the tool list of `https://api.sirenic.eu/mcp` (`tools/list`): names, descriptions,
-  schemas, and each tool's routes and prices in `_meta["eu.sirenic/prix"]`. Nothing is written by hand in this
-  package. It removes the two payment arguments (`x_payment`, `api_key`): the model never handles a key or a
+  schemas, and each tool's routes and prices in `_meta["eu.sirenic/prix"]` (with the maximum and the rule when the
+  price depends on a parameter: a watch's duration, a file's blocks). Nothing is written by hand in this package. It removes the two payment arguments (`x_payment`, `api_key`): the model never handles a key or a
   signature.
 - Each call is forwarded to the Sirenic server. The paywall stays on the server: this package never calls a REST
   route, never builds a quote and only signs a quote the server returned, under your caps.
@@ -91,7 +91,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 |---|---|---|
 | `check_french_regulator_alerts` | French regulator alerts (AMF) | $0.01 |
 | `compare_french_companies` | Compare French companies | $0.12 per entity |
-| `create_surveillance_watch` | Create a company watch | $0.05 per entity |
+| `create_surveillance_watch` | Create a company watch | from $0.05 (30 days) up to $0.50 (365 days) per entity |
 | `detect_company_identifiers` | Detect company identifiers in text (free) | free |
 | `download_french_company_document` | Download French company document | $0.10 |
 | `find_expiring_french_public_contracts` | Expiring French public contracts | $0.05 |
@@ -124,7 +124,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `get_french_company_default_risk` | French company default risk score | $0.10 |
 | `get_french_company_default_risk_batch` | French default risk score, batch (2 to 100) | $0.07 per entity |
 | `get_french_company_eu_funding` | EU research funding received (CORDIS) | $0.02 |
-| `get_french_company_file` | French company file (choose blocks) | $0.005 |
+| `get_french_company_file` | French company file (choose blocks) | from $0.005 up to $0.35 (blocks chosen per call) |
 | `get_french_company_financials` | French company financials | $0.01 |
 | `get_french_company_health_summary` | French company health summary | $0.15 |
 | `get_french_company_hiring_signals` | French hiring signals | $0.02 |
@@ -188,7 +188,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `prepare_french_invoice_file` | Prepare French invoice file | $0.03 |
 | `prospect_french_companies` | Prospect French companies | $0.02 |
 | `query_french_companies` | Query French companies by combined criteria | $0.002 to $0.02 |
-| `renew_surveillance_watch` | Renew a company watch | $0.05 per entity |
+| `renew_surveillance_watch` | Renew a company watch | from $0.05 (30 days) up to $0.50 (365 days) per entity |
 | `screen_sanctions_lists` | Sanctions screening (AML) | $0.02 |
 | `search_bodacc_announcements` | Search BODACC announcements | $0.03 |
 | `search_eu_financial_authorisations` | Search EU financial authorisations (ESMA, ECB, EIOPA) | $0.01 |

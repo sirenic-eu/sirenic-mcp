@@ -39,11 +39,20 @@ export function withoutPaymentArguments(args: Record<string, unknown> | undefine
   return clean;
 }
 
+/** How a price that depends on a parameter is formed, as the server states it (duration tiers, or blocks and a cap). */
+export type PriceRule =
+  | { selon: "duree"; parametre: string; paliers: Record<string, string>; defaut: number }
+  | { selon: "blocs"; parametre: string; blocs: Record<string, string>; plafond: string };
+
 /** Each tool's price as the server states it in `_meta["eu.sirenic/prix"]`, for display only (README table). */
 export interface RoutePrice {
+  /** The price of a call (of an entity for a batch), or the base price when it depends on a parameter. */
   prix: string;
   par: "appel" | "entite";
   devis_max: string;
+  /** Only when the price depends on a parameter: the highest price (per entity), or the cap of a call. */
+  prix_max?: string;
+  regle?: PriceRule;
 }
 
 export function routePrices(tool: Tool): Record<string, RoutePrice> | undefined {
