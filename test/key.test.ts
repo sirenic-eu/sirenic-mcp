@@ -57,6 +57,38 @@ describe("API key rail", () => {
     expect(t.remote.calls()).toEqual([]);
   });
 
+  it("key refused at startup: the instructions say the key was refused, not that the server could not be reached", async () => {
+    const t = await localServer({ SIRENIC_API_KEY: API_KEY }, { tools: REMOTE.tools, refuseWith: () => 401 });
+    close = t.close;
+    const instructions = t.client.getInstructions() ?? "";
+    expect(instructions).toContain("refused SIRENIC_API_KEY (401)");
+    expect(instructions).not.toContain("could not be reached");
+  });
+
+  it("server unreachable at startup, then the key is refused (401): cle_invalide, not service_injoignable", async () => {
+    let up = false;
+    const t = await localServer(
+      { SIRENIC_API_KEY: API_KEY },
+      {
+        tools: REMOTE.tools,
+        refuseWith: () => {
+          if (!up) throw new TypeError("fetch failed (ECONNREFUSED)");
+          return 401;
+        },
+      },
+    );
+    close = t.close;
+    expect(t.logs.join("\n")).toContain("Sirenic server unreachable");
+    up = true;
+    const first = await t.client.callTool({ name: "get_french_company_profile", arguments: { siren: "552032534" } });
+    expect(errorOf(first).error).toBe("cle_invalide");
+    const before = t.remote.requests.length;
+    const second = await t.client.callTool({ name: "get_french_company_profile", arguments: { siren: "552032534" } });
+    expect(errorOf(second).error).toBe("cle_invalide");
+    expect(t.remote.requests.length).toBe(before);
+    expect(t.remote.calls()).toEqual([]);
+  });
+
   it("suspended account (403): compte_inactif", async () => {
     const t = await localServer({ SIRENIC_API_KEY: API_KEY }, { tools: REMOTE.tools, refuseWith: () => 403 });
     close = t.close;

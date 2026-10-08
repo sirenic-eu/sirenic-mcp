@@ -43,14 +43,26 @@ function snapshotCatalogue(snapshot: Snapshot): Catalogue {
   };
 }
 
-function instructionsFor(catalogue: Catalogue): string {
+/** What the client is told when the list comes from the snapshot: why, and what every call will answer. */
+function instructionsFor(catalogue: Catalogue, keyState: KeyState): string {
   const parts = [catalogue.instructions ?? ""];
   if (catalogue.source === "snapshot") {
+    const date = catalogue.snapshotDate ?? "unknown date";
     parts.push(
-      `Tool list served from the snapshot of ${catalogue.snapshotDate ?? "unknown date"}: the Sirenic server could not be reached when this server started, and calls are refused until it answers.`,
+      keyState === "cle_invalide"
+        ? `Tool list served from the snapshot of ${date}: the Sirenic server refused SIRENIC_API_KEY (401) when this server started, and every call answers cle_invalide until it is restarted with a valid key.`
+        : keyState === "compte_inactif"
+          ? `Tool list served from the snapshot of ${date}: the Sirenic account of SIRENIC_API_KEY is suspended or closed (403), and every call answers compte_inactif.`
+          : `Tool list served from the snapshot of ${date}: the Sirenic server could not be reached when this server started, and calls are refused until it answers.`,
     );
   }
   return parts.filter((p) => p !== "").join(" ");
+}
+
+/** A key the server refuses (401, 403) on the key rail: final for the life of the process. */
+function refusedKey(config: Config, failure: TransportFailure): KeyState {
+  if (config.rail !== "key" || failure.kind !== "http") return undefined;
+  return failure.status === 401 ? "cle_invalide" : failure.status === 403 ? "compte_inactif" : undefined;
 }
 
 function failureText(failure: TransportFailure): string {
@@ -126,7 +138,7 @@ export class SirenicServer {
     this.wallet = config.rail === "wallet" && config.walletKey ? new Wallet(config.walletKey, config.maxPerCall, config.maxPerSession) : undefined;
     this.server = new Server(
       { name: "sirenic", title: "Sirenic", version: PACKAGE_VERSION },
-      { capabilities: { tools: { listChanged: true } }, instructions: instructionsFor(catalogue) },
+      { capabilities: { tools: { listChanged: true } }, instructions: instructionsFor(catalogue, keyState) },
     );
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: this.catalogue.tools }));
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => this.call(request.params.name, request.params.arguments));
@@ -148,8 +160,8 @@ export class SirenicServer {
     } catch (error) {
       await options.remote.reset();
       const failure = classifyFailure(error);
-      if (options.config.rail === "key" && failure.kind === "http" && (failure.status === 401 || failure.status === 403)) {
-        keyState = failure.status === 401 ? "cle_invalide" : "compte_inactif";
+      keyState = refusedKey(options.config, failure);
+      if (keyState && failure.kind === "http") {
         log(`SIRENIC_API_KEY refused by the server (${failure.status}): every call will answer ${keyState}; the wallet is never used instead.`);
       } else {
         log(`Sirenic server unreachable (${failureText(failure)}): serving the shipped tool list, calls are refused until it answers.`);
@@ -180,9 +192,10 @@ export class SirenicServer {
         ...(signed ? { payment: "not settled: the request was refused before reaching the tool" } : {}),
       });
     }
-    if (this.options.config.rail === "key" && failure.kind === "http" && (failure.status === 401 || failure.status === 403)) {
-      this.keyState = failure.status === 401 ? "cle_invalide" : "compte_inactif";
-      return this.keyError(this.keyState);
+    const refused = refusedKey(this.options.config, failure);
+    if (refused) {
+      this.keyState = refused;
+      return this.keyError(refused);
     }
     if (signed) {
       return packageError(
@@ -193,8 +206,11 @@ export class SirenicServer {
     return packageError("service_injoignable", `The Sirenic server could not be reached (${failureText(failure)}). Nothing was signed.`);
   }
 
-  /** In snapshot mode, one attempt to reach the server again, which refreshes the list. */
-  private async reconnect(): Promise<boolean> {
+  /**
+   * In snapshot mode, one attempt to reach the server again, which refreshes the list: nothing when it answers, else
+   * the error the call returns (the key refused, 401 or 403, is an error of the key, not of the network).
+   */
+  private async reconnect(): Promise<CallToolResult | undefined> {
     try {
       const list = await this.options.remote.listTools();
       this.catalogue = {
@@ -204,18 +220,24 @@ export class SirenicServer {
         ...(list.serverVersion ? { serverVersion: list.serverVersion } : {}),
       };
       await this.server.sendToolListChanged().catch(() => undefined);
-      return true;
-    } catch {
+      return undefined;
+    } catch (error) {
       await this.options.remote.reset();
-      return false;
+      const refused = refusedKey(this.options.config, classifyFailure(error));
+      if (refused) {
+        this.keyState = refused;
+        return this.keyError(refused);
+      }
+      return packageError("service_injoignable", "The Sirenic server could not be reached: the tool list comes from the shipped snapshot and calls are refused until the server answers. Nothing was signed.");
     }
   }
 
   async call(name: string, rawArgs: Record<string, unknown> | undefined): Promise<CallToolResult> {
     if (!this.catalogue.tools.some((t) => t.name === name)) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
     if (this.keyState) return this.keyError(this.keyState);
-    if (this.catalogue.source === "snapshot" && !(await this.reconnect())) {
-      return packageError("service_injoignable", "The Sirenic server could not be reached: the tool list comes from the shipped snapshot and calls are refused until the server answers. Nothing was signed.");
+    if (this.catalogue.source === "snapshot") {
+      const unreachable = await this.reconnect();
+      if (unreachable) return unreachable;
     }
     const args = withoutPaymentArguments(rawArgs);
     const { remote, config } = this.options;
