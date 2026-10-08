@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-08T14:40:11.691Z",
-  "source": "http://127.0.0.1:36803/mcp",
+  "generated_at": "2026-10-08T21:17:23.388Z",
+  "source": "https://api.sirenic.eu/mcp",
   "server": {
     "name": "sirenic",
     "version": "1.2.0"
@@ -1389,7 +1389,7 @@
     {
       "name": "find_expiring_french_public_contracts",
       "title": "Expiring French public contracts",
-      "description": "Tender anticipation for France: public contracts EXPIRING within a window (1-24 months, default 12) — buyers re-tender 4 to 9 months before expiry, so this surfaces opportunities BEFORE any notice is published. Filter by CPV prefix (45 = construction) and department. Returns buyer, incumbent holders, amounts, lot number when stated, whether the amount is a firm price or an ENVELOPE (call-off orders, subsequent contracts, optional tranches), declared subcontracting, framework-agreement flag (its amount is a MAXIMUM CEILING over the duration, not spend), estimated end dates (initial declared duration; duration amendments are absent from the source). From official DECP open data. Paid via x402 ($0.05 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
+      "description": "Tender anticipation for France: public contracts EXPIRING within a window (1-24 months, default 12): it surfaces opportunities BEFORE any notice is published. Filter by CPV prefix (45 = construction, 9091 = cleaning) and department. Returns buyer, incumbent holders, amounts, lot number when stated, whether the amount is a firm price or an ENVELOPE (call-off orders, subsequent contracts, optional tranches), declared subcontracting, framework-agreement flag (its amount is a MAXIMUM CEILING over the duration, not spend), estimated end dates (date_fin_estimee: notification + declared duration, amended where the historical DECP regime publishes it; duree_mois is the initial duration). From official DECP open data. Paid via x402 ($0.05 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1483,7 +1483,7 @@
     {
       "name": "get_french_public_buyer_profile",
       "title": "French public buyer profile",
-      "description": "Procurement profile of a French public buyer (by SIRET): contract volumes by year, top CPV segments, incumbent suppliers with their contracts expiring within 18 months, framework-agreement share, share of amounts that are envelopes rather than firm prices, share of contracts with declared subcontracting, share granting an advance, dominant CCAG and price type, publishing platform, average bids received per tender and median publication delay — the buying habits to know before a sourcing meeting. From official DECP open data. Paid via x402 ($0.02 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
+      "description": "Procurement profile of a French public buyer (by SIRET): contract volumes by year, top CPV segments, incumbent suppliers with their contracts expiring within 18 months, framework-agreement share, share of amounts that are envelopes rather than firm prices, share of contracts with declared subcontracting, share granting an advance, dominant CCAG and price type, publishing platform, average bids received per tender and median publication delay: the buying habits to know before a sourcing meeting. From official DECP open data. Paid via x402 ($0.02 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1563,7 +1563,7 @@
     {
       "name": "get_company_procurement_competitors",
       "title": "French procurement competitors",
-      "description": "Competitive intelligence on French public procurement: who wins contracts on the SAME CPV segments as a given company (SIREN) — top rival contractors over the last 3 years with counts, amounts and shared segments. From official DECP open data. Paid via x402 ($0.02 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
+      "description": "Competitive intelligence on French public procurement: who wins contracts on the SAME CPV segments as a given company (SIREN): top rival contractors over the last 3 years with counts, amounts and shared segments. From official DECP open data. Paid via x402 ($0.02 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -8745,7 +8745,7 @@
     {
       "name": "get_surveillance_watch",
       "title": "Company watch status",
-      "description": "Status and accumulated events of a watchlist created with create_surveillance_watch. Free — the surveillance_id token IS the capability.",
+      "description": "Status and the 100 most recent events (total and cut in listes_bornees.evenements) of a watchlist created with create_surveillance_watch. Free: the surveillance_id token IS the capability.",
       "inputSchema": {
         "type": "object",
         "properties": {
