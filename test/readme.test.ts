@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { routePrices } from "../src/catalogue.js";
 import { ERROR_CODES } from "../src/errors.js";
 import { priceLabel, replaceToolsTable } from "../scripts/tableau-lib.js";
-import { SNAPSHOT } from "./helpers/fixtures.js";
+import { QUOTES, SNAPSHOT } from "./helpers/fixtures.js";
 
 const README = readFileSync(new URL("../README.md", import.meta.url), "utf8");
 
@@ -43,6 +43,15 @@ describe("README", () => {
     expect(sentence).not.toBe("");
     expect([...sentence.matchAll(/`([a-z_]+)`/g)].map((m) => m[1])).toEqual([...ERROR_CODES]);
     expect(README).toContain("it answers `payment_required: true` in `structuredContent`, with the\nserver's `quote`");
+  });
+
+  it("the free key quota in the README is the server's, read in the recorded quote (free_tier)", () => {
+    for (const quote of [QUOTES.search_french_companies, QUOTES.get_french_company_default_risk]) {
+      const offer = (quote.structuredContent as { free_tier: { monthly_calls: number; max_price_per_call: string } }).free_tier;
+      expect(README).toContain(`A free key gives ${offer.monthly_calls} calls a month on routes at ${offer.max_price_per_call} or less;`);
+    }
+    // the only figure of the sentence: no other quota written by hand
+    expect([...README.matchAll(/(\d+) calls a month/g)].map((m) => m[1])).toEqual(["150"]);
   });
 
   it("no long dash, no secret-looking value, install in one line", () => {
