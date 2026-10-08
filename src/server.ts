@@ -218,46 +218,58 @@ export class SirenicServer {
     if (!quote) return first;
     if (!this.wallet) return paymentRequired(first, quote, config.rail === "key" && config.walletKey !== undefined);
 
+    // The price is reserved against the session cap inside decide(), before the first await below: calls sent together
+    // never pass the same check. The reservation becomes spending on a result or on an uncertain settlement, and is
+    // given back on every other outcome (the finally below covers any path that did not settle it).
     const decision = this.wallet.decide(quote);
     if (!decision.ok) {
       const priceText = decision.price !== undefined ? formatUsd(decision.price) : "unreadable";
+      const reserved = this.wallet.reserved;
+      const inFlight = reserved > 0n ? ` and ${formatUsd(reserved)} is held by calls in progress` : "";
       const message =
         decision.scope === "call"
           ? `The quote is ${priceText}, above the cap of ${formatUsd(config.maxPerCall)} per call. Nothing was signed. To pay it, raise ${decision.variable} (or ${decision.alias}) in this MCP server's environment and restart it.`
-          : `The quote is ${priceText} and ${formatUsd(this.wallet.spent)} of the ${formatUsd(config.maxPerSession)} session cap is already spent. Nothing was signed. To go on, raise ${decision.variable} (or ${decision.alias}) and restart this MCP server.`;
+          : `The quote is ${priceText} and ${formatUsd(this.wallet.spent)} of the ${formatUsd(config.maxPerSession)} session cap is already spent${inFlight}. Nothing was signed. To go on, raise ${decision.variable} (or ${decision.alias}) and restart this MCP server.`;
       return packageError("plafond_depasse", message, {
         price_usd: priceText,
         cap_usd: formatUsd(decision.scope === "call" ? config.maxPerCall : config.maxPerSession),
         session_spent_usd: formatUsd(this.wallet.spent),
+        ...(reserved > 0n ? { session_reserved_usd: formatUsd(reserved) } : {}),
         variable: decision.variable,
       });
     }
 
-    let signed: { header: string; amount: bigint };
+    const { reservation } = decision;
     try {
-      signed = await this.wallet.sign(quote, decision.limit);
-    } catch (error) {
-      return packageError("paiement_refuse", `The quote could not be signed by the local wallet (${error instanceof Error ? error.message : String(error)}). Nothing was sent.`);
-    }
+      let signed: { header: string; amount: bigint };
+      try {
+        signed = await this.wallet.sign(quote, reservation.amount);
+      } catch (error) {
+        return packageError("paiement_refuse", `The quote could not be signed by the local wallet (${error instanceof Error ? error.message : String(error)}). Nothing was sent.`);
+      }
 
-    let paid: CallToolResult;
-    try {
-      paid = await remote.callTool(name, { ...args, x_payment: signed.header });
-    } catch (error) {
-      const failure = classifyFailure(error);
-      if (!(failure.kind === "http" && failure.status === 429)) this.wallet.record(signed.amount);
-      return this.transportError(failure, true);
+      let paid: CallToolResult;
+      try {
+        paid = await remote.callTool(name, { ...args, x_payment: signed.header });
+      } catch (error) {
+        const failure = classifyFailure(error);
+        // 429: refused before the tool, nothing settled. Anything else after a signed payment: it may have been settled.
+        if (!(failure.kind === "http" && failure.status === 429)) reservation.settle();
+        return this.transportError(failure, true);
+      }
+      const again = quoteOf(paid);
+      if (again) {
+        const reason = typeof (again as { error?: unknown }).error === "string" ? ` (${(again as { error: string }).error})` : "";
+        return packageError("paiement_refuse", `The Sirenic server rejected the signed payment${reason}. Nothing was replayed.`, {
+          price_usd: formatUsd(signed.amount),
+        });
+      }
+      // A tool error cancels the payment on the server (nobody pays for a 400, 404 or 503): only a result counts.
+      if (!paid.isError) reservation.settle();
+      return paid;
+    } finally {
+      reservation.release();
     }
-    const again = quoteOf(paid);
-    if (again) {
-      const reason = typeof (again as { error?: unknown }).error === "string" ? ` (${(again as { error: string }).error})` : "";
-      return packageError("paiement_refuse", `The Sirenic server rejected the signed payment${reason}. Nothing was replayed.`, {
-        price_usd: formatUsd(signed.amount),
-      });
-    }
-    // A tool error cancels the payment on the server (nobody pays for a 400, 404 or 503): only a result counts.
-    if (!paid.isError) this.wallet.record(signed.amount);
-    return paid;
   }
 }
 

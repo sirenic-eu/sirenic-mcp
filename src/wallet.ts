@@ -53,13 +53,26 @@ export function quotePrice(quote: PaymentRequired): bigint | undefined {
   return lowest;
 }
 
+/**
+ * The quoted price, held against the session cap from the moment the cap is checked until the payment is settled or
+ * given up. `settle()` turns it into spending, `release()` gives it back; whichever comes first wins, the other is a
+ * no-op.
+ */
+export interface Reservation {
+  readonly amount: bigint;
+  settle(): void;
+  release(): void;
+}
+
 export type CapDecision =
-  | { ok: true; price: bigint; limit: bigint }
+  | { ok: true; price: bigint; reservation: Reservation }
   | { ok: false; price: bigint | undefined; limit: bigint; variable: string; alias: string; scope: "call" | "session" };
 
 export class Wallet {
   private readonly account: ReturnType<typeof privateKeyToAccount>;
   private spentAtomic = 0n;
+  /** Held by calls between the cap check and the end of their payment (calls run concurrently). */
+  private reservedAtomic = 0n;
 
   constructor(
     privateKey: `0x${string}`,
@@ -77,22 +90,46 @@ export class Wallet {
     return this.spentAtomic;
   }
 
+  get reserved(): bigint {
+    return this.reservedAtomic;
+  }
+
   get sessionCap(): bigint {
     return this.maxPerSession;
   }
 
-  /** Whether the quote fits under the cap per call and under what is left of the session cap. */
+  /**
+   * Whether the quote fits under the cap per call and under what is left of the session cap, once the spending and the
+   * reservations of the calls in flight are counted; if it fits, the price is RESERVED here, synchronously, before any
+   * signature: calls sent together (an MCP client may run the tools of one turn at once) cannot all pass the same check.
+   */
   decide(quote: PaymentRequired): CapDecision {
     const price = quotePrice(quote);
-    const left = this.maxPerSession > this.spentAtomic ? this.maxPerSession - this.spentAtomic : 0n;
+    const committed = this.spentAtomic + this.reservedAtomic;
+    const left = this.maxPerSession > committed ? this.maxPerSession - committed : 0n;
     const limit = this.maxPerCall < left ? this.maxPerCall : left;
-    if (price !== undefined && price <= limit) return { ok: true, price, limit };
+    if (price !== undefined && price <= limit) return { ok: true, price, reservation: this.reserve(price) };
     const callBlocks = price === undefined || price > this.maxPerCall;
     const [variable, alias] = callBlocks ? CAP_PER_CALL_VARIABLES : CAP_PER_SESSION_VARIABLES;
     return { ok: false, price, limit, variable, alias, scope: callBlocks ? "call" : "session" };
   }
 
-  /** Signs one option of the quote at or under `limit` (EIP-3009 authorization, no gas); the header value for `x_payment`. */
+  private reserve(amount: bigint): Reservation {
+    this.reservedAtomic += amount;
+    let open = true;
+    const close = (spend: boolean) => {
+      if (!open) return;
+      open = false;
+      this.reservedAtomic -= amount;
+      if (spend) this.spentAtomic += amount;
+    };
+    return { amount, settle: () => close(true), release: () => close(false) };
+  }
+
+  /**
+   * Signs one option of the quote at or under `limit` (EIP-3009 authorization, no gas); the header value for
+   * `x_payment`. The caller passes the amount it reserved: nothing above it can be signed.
+   */
   async sign(quote: PaymentRequired, limit: bigint): Promise<{ header: string; amount: bigint }> {
     const client = new x402Client();
     registerExactEvmScheme(client, { signer: this.account });
@@ -105,8 +142,4 @@ export class Wallet {
     return { header: encodePaymentSignatureHeader(payload), amount };
   }
 
-  /** Counts a payment against the session cap. */
-  record(amount: bigint): void {
-    this.spentAtomic += amount;
-  }
 }

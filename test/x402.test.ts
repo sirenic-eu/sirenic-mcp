@@ -85,6 +85,48 @@ describe("x402 rail", () => {
     expect(t.remote.calls().filter((c) => c.body?.params?.arguments?.x_payment).length).toBe(2);
   });
 
+  it("five calls at once, $0.002 each, under a $0.005 session cap: the cap is reserved before signing, two are signed, never more than the cap", async () => {
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY, SIRENIC_MAX_PAR_SESSION: "0.005" }, server(QUOTES.search_french_companies, () => ({ result: dataResult() })));
+    close = t.close;
+    const results = await Promise.all(Array.from({ length: 5 }, () => t.client.callTool({ name: "search_french_companies", arguments: { q: "danone" } })));
+    const signed = t.remote.calls().filter((c) => c.body?.params?.arguments?.x_payment);
+    // floor(0.005 / 0.002) = 2: at most two payments fit under the session cap, whatever the order of the answers
+    expect(signed.length).toBe(2);
+    expect(t.local.spent).toBe(4000n);
+    expect(t.local.spent <= 5000n).toBe(true);
+    const refused = results.filter((r) => r.isError).map((r) => errorOf(r));
+    expect(refused.length).toBe(3);
+    for (const e of refused) expect(e).toMatchObject({ error: "plafond_depasse", cap_usd: "$0.005", variable: "SIRENIC_MAX_PAR_SESSION" });
+  });
+
+  it("five calls at once, $0.002 each, under a $0.003 session cap: a single one is signed", async () => {
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY, SIRENIC_MAX_PAR_SESSION: "0.003" }, server(QUOTES.search_french_companies, () => ({ result: dataResult() })));
+    close = t.close;
+    const results = await Promise.all(Array.from({ length: 5 }, () => t.client.callTool({ name: "search_french_companies", arguments: { q: "danone" } })));
+    expect(t.remote.calls().filter((c) => c.body?.params?.arguments?.x_payment).length).toBe(1);
+    expect(t.local.spent).toBe(2000n);
+    expect(results.filter((r) => !r.isError).length).toBe(1);
+  });
+
+  it("a reservation is given back when the payment does not go through (server error, new quote, 429): the next call is signed", async () => {
+    // a $0.002 session cap: room for exactly one payment, so a reservation kept by mistake refuses the next call
+    const answers: CallAnswer[] = [
+      { result: serverError(503, { error: "amont_indisponible", message: "Upstream register unavailable" }) },
+      { result: QUOTES.search_french_companies },
+      { status: 429 },
+      { result: dataResult() },
+    ];
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY, SIRENIC_MAX_PAR_SESSION: "0.002" }, server(QUOTES.search_french_companies, (n) => answers[n - 1]!));
+    close = t.close;
+    const call = () => t.client.callTool({ name: "search_french_companies", arguments: { q: "danone" } });
+    expect(errorOf(await call()).statut_http).toBe(503);
+    expect(errorOf(await call()).error).toBe("paiement_refuse");
+    expect(errorOf(await call()).error).toBe("trop_de_requetes");
+    expect((await call()).isError).toBe(false);
+    expect(t.local.spent).toBe(2000n);
+    expect(t.remote.calls().filter((c) => c.body?.params?.arguments?.x_payment).length).toBe(4);
+  });
+
   it("a new quote after the payment: paiement_refuse, nothing replayed, nothing counted", async () => {
     const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, server(QUOTES.search_french_companies, () => ({ result: QUOTES.search_french_companies })));
     close = t.close;
