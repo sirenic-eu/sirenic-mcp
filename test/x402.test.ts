@@ -209,6 +209,19 @@ describe("no rail", () => {
     expect(t.remote.calls().length).toBe(1);
   });
 
+  it("the hint keeps the server's word on the free tier: a route above it is not offered as free", async () => {
+    const t = await localServer({}, { tools: REMOTE.tools, onCall: () => ({ result: QUOTES.get_french_company_default_risk }) });
+    close = t.close;
+    const r = await t.client.callTool({ name: "get_french_company_default_risk", arguments: { siren: "552032534" } });
+    const s = r.structuredContent as { hint: string; free_tier: { summary: string; this_route: boolean } };
+    expect(s.free_tier.this_route).toBe(false);
+    expect(s.hint).toContain("paiement_requis: this tool costs $0.10 per call.");
+    expect(s.hint).toContain(s.free_tier.summary);
+    expect(s.hint).toContain("not this one (priced above $0.05)");
+    expect(s.hint).toContain("prepaid credits");
+    expect(s.hint).not.toContain("a free key");
+  });
+
   it("paiement_requis carries no receipt: nothing was paid", async () => {
     const t = await localServer({}, { tools: REMOTE.tools, onCall: () => ({ result: QUOTES.search_french_companies }) });
     close = t.close;

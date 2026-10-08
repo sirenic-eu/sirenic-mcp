@@ -72,21 +72,34 @@ function quoteOf(result: CallToolResult): PaymentRequired | undefined {
   return s?.payment_required === true && isQuote(s.quote) ? s.quote : undefined;
 }
 
-function signupUrl(result: CallToolResult): string | undefined {
-  const offer = (result.structuredContent as { free_tier?: { signup_url?: unknown } } | undefined)?.free_tier;
-  return typeof offer?.signup_url === "string" ? offer.signup_url : undefined;
+/** The free key offer of the quote, as the server sent it (`free_tier`): its own summary, whether it covers this route. */
+function freeTier(result: CallToolResult): { summary?: string; thisRoute?: boolean; signup?: string } {
+  const offer = (result.structuredContent as { free_tier?: { summary?: unknown; this_route?: unknown; signup_url?: unknown } } | undefined)?.free_tier;
+  return {
+    ...(typeof offer?.summary === "string" ? { summary: offer.summary } : {}),
+    ...(typeof offer?.this_route === "boolean" ? { thisRoute: offer.this_route } : {}),
+    ...(typeof offer?.signup_url === "string" ? { signup: offer.signup_url } : {}),
+  };
 }
 
-/** A quote with no rail to pay it: the quote and the free key offer, as the server sent them, and how to pay. */
+/**
+ * A quote with no rail to pay it: the quote and the free key offer, as the server sent them, and how to pay. The
+ * server's own sentence on the free tier leads (it says whether this route is in it); the package never calls a key
+ * free for a route the server prices above the free tier.
+ */
 function paymentRequired(result: CallToolResult, quote: PaymentRequired, walletIgnored: boolean): CallToolResult {
   const price = quotePrice(quote);
   const priceText = price !== undefined ? formatUsd(price) : "the quoted amount";
-  const signup = signupUrl(result);
+  const offer = freeTier(result);
+  const key =
+    offer.thisRoute === false
+      ? "an API key, which pays this route from prepaid credits"
+      : `an API key${offer.summary === undefined && offer.signup ? `: ${offer.signup}` : ""}`;
   const hint =
     `paiement_requis: this tool costs ${priceText} per call. ` +
     (walletIgnored
       ? "The API key did not cover this call and the wallet is never used when SIRENIC_API_KEY is set."
-      : `To pay, set SIRENIC_API_KEY (a free key${signup ? `: ${signup}` : ""}) or SIRENIC_WALLET_KEY (an x402 wallet, USDC on Base) in this MCP server's environment, then restart it.`);
+      : `${offer.summary ? `${offer.summary} ` : ""}To pay, set SIRENIC_API_KEY (${key}) or SIRENIC_WALLET_KEY (an x402 wallet, USDC on Base) in this MCP server's environment, then restart it.`);
   const s = result.structuredContent as Record<string, unknown>;
   const structured = { payment_required: true, hint, quote, ...(s.free_tier ? { free_tier: s.free_tier } : {}) };
   return {
