@@ -67,11 +67,12 @@ signature, so calls sent together never spend more than the cap.
 
 - At startup the server reads the tool list of `https://api.sirenic.eu/mcp` (`tools/list`): names, descriptions,
   schemas, and each tool's routes and prices in `_meta["eu.sirenic/prix"]` (with the maximum and the rule when the
-  price depends on a parameter: a watch's duration, a file's blocks). Nothing is written by hand in this package. It removes the two payment arguments (`x_payment`, `api_key`): the model never handles a key or a
-  signature.
+  price depends on a parameter: a watch's duration, a file's blocks). Nothing is written by hand in this package.
+  It removes the two payment arguments (`x_payment`, `api_key`): the model never handles a key or a signature.
 - Each call is forwarded to the Sirenic server. The paywall stays on the server: this package never calls a REST
   route, never builds a quote and only signs a quote the server returned, under your caps.
-- A paid call returns the settlement receipt in `_meta["x402/payment-response"]` (transaction, network, payer).
+- A call paid in x402 and settled returns the server's settlement receipt in `_meta["x402/payment-response"]`
+  (transaction, network, payer). A payment that is not settled returns none, and this package never makes one up.
 - If the server cannot be reached at startup, the tool list comes from the snapshot shipped with the package (its
   date is in the server instructions) and every call is refused until the server answers. Nothing is signed.
 - No file is written, no telemetry is sent. The server identifies itself as `sirenic-mcp-npm/<version>`.
