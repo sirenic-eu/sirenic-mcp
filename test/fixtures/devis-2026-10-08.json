@@ -1,0 +1,337 @@
+{
+  "recorded_at": "2026-10-08T06:48:12.768Z",
+  "source": "https://api.sirenic.eu/mcp",
+  "note": "Two unpaid tools/call answers (x402 v2 quotes), anonymous and free: search_french_companies q=danone ($0.002) and get_french_company_default_risk siren=552032534 ($0.10).",
+  "search_french_companies": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"payment_required\": true,\n  \"hint\": \"Free API key, no card: 150 calls a month on routes at $0.05 or less, this one included. https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp Settle this x402 quote (sign a USDC or EURC payment matching one of the `accepts` entries — the EURC amount is the same figure as the USDC one, numeric parity, not FX-converted) and call the tool again with the resulting PAYMENT-SIGNATURE header value in `x_payment`. Paying in EURC requires an explicit client opt-in since @x402/core 2.23 (spendControls.allowedAssets), otherwise your client silently keeps the USDC option. Set allowedAssets[].maxAmountPerPayment as well (integer ATOMIC amount, e.g. \\\"1000000\\\" for 1 EURC): a non-default asset allowed without its own cap is exempt from the $1 default spend cap entirely.\",\n  \"quote\": {\n    \"x402Version\": 2,\n    \"error\": \"Payment required\",\n    \"resource\": {\n      \"url\": \"https://api.sirenic.eu/v1/recherche\",\n      \"description\": \"French company search and company lookup by name or SIREN in the official French company registry (INSEE Sirene / INPI RNE open data). Name search returns the top 10 matches with identity, SIREN, NAF code, city and active/ceased status, plus a score_confiance (0-1 match confidence) that helps disambiguate homonyms. The entry point to official data and company data on France: resolve a trading name to its SIREN identifier before pulling the full company profile, filings or financials.\",\n      \"mimeType\": \"application/json\",\n      \"serviceName\": \"Sirenic\",\n      \"tags\": [\n        \"france\",\n        \"search\",\n        \"siren\",\n        \"sirene\",\n        \"company-lookup\"\n      ],\n      \"iconUrl\": \"https://api.sirenic.eu/logo.png\"\n    },\n    \"accepts\": [\n      {\n        \"scheme\": \"exact\",\n        \"network\": \"eip155:8453\",\n        \"amount\": \"2000\",\n        \"asset\": \"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\n        \"payTo\": \"0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2\",\n        \"maxTimeoutSeconds\": 120,\n        \"extra\": {\n          \"name\": \"USD Coin\",\n          \"version\": \"2\"\n        }\n      },\n      {\n        \"scheme\": \"exact\",\n        \"network\": \"eip155:8453\",\n        \"amount\": \"2000\",\n        \"asset\": \"0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42\",\n        \"payTo\": \"0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2\",\n        \"maxTimeoutSeconds\": 120,\n        \"extra\": {\n          \"name\": \"EURC\",\n          \"version\": \"2\"\n        }\n      }\n    ],\n    \"extensions\": {\n      \"bazaar\": {\n        \"info\": {\n          \"input\": {\n            \"type\": \"http\",\n            \"method\": \"GET\",\n            \"queryParams\": {\n              \"q\": \"danone\"\n            }\n          },\n          \"output\": {\n            \"type\": \"json\",\n            \"example\": {\n              \"total_results\": 49,\n              \"resultats\": [\n                {\n                  \"siren\": \"552032534\",\n                  \"denomination\": \"DANONE\",\n                  \"statut_diffusion\": \"totale\",\n                  \"etat_administratif\": \"actif\",\n                  \"activite_principale\": \"70.10Z\",\n                  \"commune_siege\": \"PARIS\",\n                  \"code_postal_siege\": \"75009\",\n                  \"score_confiance\": 1\n                }\n              ],\n              \"tronque\": true,\n              \"source\": \"INSEE Sirene / INPI RNE via recherche-entreprises.api.gouv.fr, licence ouverte Etalab 2.0\",\n              \"disclaimer\": \"Données issues de l'open data, fournies en l'état sans garantie. / Open data, provided as is without warranty.\",\n              \"etages_abandonnes\": [],\n              \"data_freshness\": \"stock Sirene mensuel (2026-09-01), dirigeants temps réel\"\n            }\n          }\n        },\n        \"schema\": {\n          \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n          \"type\": \"object\",\n          \"properties\": {\n            \"input\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"type\": {\n                  \"type\": \"string\",\n                  \"const\": \"http\"\n                },\n                \"method\": {\n                  \"type\": \"string\",\n                  \"enum\": [\n                    \"GET\"\n                  ]\n                },\n                \"queryParams\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"q\": {\n                      \"type\": \"string\",\n                      \"description\": \"Company name, or a French identifier — SIREN, SIRET or FR VAT number, spaced or labelled (\\\"SIREN : 552 032 534\\\"), resolved directly. Unsupported characters are stripped, not rejected; 400 only if nothing searchable is left (1-100 chars once cleaned up).\"\n                    }\n                  },\n                  \"required\": [\n                    \"q\"\n                  ]\n                }\n              },\n              \"required\": [\n                \"type\",\n                \"method\"\n              ],\n              \"additionalProperties\": false\n            },\n            \"output\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"type\": {\n                  \"type\": \"string\"\n                },\n                \"example\": {\n                  \"type\": \"object\"\n                }\n              },\n              \"required\": [\n                \"type\"\n              ]\n            }\n          },\n          \"required\": [\n            \"input\"\n          ]\n        }\n      }\n    }\n  },\n  \"free_tier\": {\n    \"summary\": \"Free API key, no card: 150 calls a month on routes at $0.05 or less, this one included. https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp\",\n    \"monthly_calls\": 150,\n    \"max_price_per_call\": \"$0.05\",\n    \"this_route\": true,\n    \"signup_url\": \"https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp\",\n    \"eligible_routes_url\": \"https://api.sirenic.eu/en/offres#grille\"\n  }\n}"
+      }
+    ],
+    "structuredContent": {
+      "payment_required": true,
+      "hint": "Free API key, no card: 150 calls a month on routes at $0.05 or less, this one included. https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp Settle this x402 quote (sign a USDC or EURC payment matching one of the `accepts` entries — the EURC amount is the same figure as the USDC one, numeric parity, not FX-converted) and call the tool again with the resulting PAYMENT-SIGNATURE header value in `x_payment`. Paying in EURC requires an explicit client opt-in since @x402/core 2.23 (spendControls.allowedAssets), otherwise your client silently keeps the USDC option. Set allowedAssets[].maxAmountPerPayment as well (integer ATOMIC amount, e.g. \"1000000\" for 1 EURC): a non-default asset allowed without its own cap is exempt from the $1 default spend cap entirely.",
+      "quote": {
+        "x402Version": 2,
+        "error": "Payment required",
+        "resource": {
+          "url": "https://api.sirenic.eu/v1/recherche",
+          "description": "French company search and company lookup by name or SIREN in the official French company registry (INSEE Sirene / INPI RNE open data). Name search returns the top 10 matches with identity, SIREN, NAF code, city and active/ceased status, plus a score_confiance (0-1 match confidence) that helps disambiguate homonyms. The entry point to official data and company data on France: resolve a trading name to its SIREN identifier before pulling the full company profile, filings or financials.",
+          "mimeType": "application/json",
+          "serviceName": "Sirenic",
+          "tags": [
+            "france",
+            "search",
+            "siren",
+            "sirene",
+            "company-lookup"
+          ],
+          "iconUrl": "https://api.sirenic.eu/logo.png"
+        },
+        "accepts": [
+          {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "amount": "2000",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "payTo": "0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2",
+            "maxTimeoutSeconds": 120,
+            "extra": {
+              "name": "USD Coin",
+              "version": "2"
+            }
+          },
+          {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "amount": "2000",
+            "asset": "0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42",
+            "payTo": "0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2",
+            "maxTimeoutSeconds": 120,
+            "extra": {
+              "name": "EURC",
+              "version": "2"
+            }
+          }
+        ],
+        "extensions": {
+          "bazaar": {
+            "info": {
+              "input": {
+                "type": "http",
+                "method": "GET",
+                "queryParams": {
+                  "q": "danone"
+                }
+              },
+              "output": {
+                "type": "json",
+                "example": {
+                  "total_results": 49,
+                  "resultats": [
+                    {
+                      "siren": "552032534",
+                      "denomination": "DANONE",
+                      "statut_diffusion": "totale",
+                      "etat_administratif": "actif",
+                      "activite_principale": "70.10Z",
+                      "commune_siege": "PARIS",
+                      "code_postal_siege": "75009",
+                      "score_confiance": 1
+                    }
+                  ],
+                  "tronque": true,
+                  "source": "INSEE Sirene / INPI RNE via recherche-entreprises.api.gouv.fr, licence ouverte Etalab 2.0",
+                  "disclaimer": "Données issues de l'open data, fournies en l'état sans garantie. / Open data, provided as is without warranty.",
+                  "etages_abandonnes": [],
+                  "data_freshness": "stock Sirene mensuel (2026-09-01), dirigeants temps réel"
+                }
+              }
+            },
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "http"
+                    },
+                    "method": {
+                      "type": "string",
+                      "enum": [
+                        "GET"
+                      ]
+                    },
+                    "queryParams": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string",
+                          "description": "Company name, or a French identifier — SIREN, SIRET or FR VAT number, spaced or labelled (\"SIREN : 552 032 534\"), resolved directly. Unsupported characters are stripped, not rejected; 400 only if nothing searchable is left (1-100 chars once cleaned up)."
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "method"
+                  ],
+                  "additionalProperties": false
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "example": {
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                }
+              },
+              "required": [
+                "input"
+              ]
+            }
+          }
+        }
+      },
+      "free_tier": {
+        "summary": "Free API key, no card: 150 calls a month on routes at $0.05 or less, this one included. https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp",
+        "monthly_calls": 150,
+        "max_price_per_call": "$0.05",
+        "this_route": true,
+        "signup_url": "https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp",
+        "eligible_routes_url": "https://api.sirenic.eu/en/offres#grille"
+      }
+    },
+    "isError": false
+  },
+  "get_french_company_default_risk": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"payment_required\": true,\n  \"hint\": \"Free API key, no card: 150 calls a month on routes at $0.05 or less, not this one (priced above $0.05). https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp Settle this x402 quote (sign a USDC or EURC payment matching one of the `accepts` entries — the EURC amount is the same figure as the USDC one, numeric parity, not FX-converted) and call the tool again with the resulting PAYMENT-SIGNATURE header value in `x_payment`. Paying in EURC requires an explicit client opt-in since @x402/core 2.23 (spendControls.allowedAssets), otherwise your client silently keeps the USDC option. Set allowedAssets[].maxAmountPerPayment as well (integer ATOMIC amount, e.g. \\\"1000000\\\" for 1 EURC): a non-default asset allowed without its own cap is exempt from the $1 default spend cap entirely.\",\n  \"quote\": {\n    \"x402Version\": 2,\n    \"error\": \"Payment required\",\n    \"resource\": {\n      \"url\": \"https://api.sirenic.eu/v1/score/defaillance/{siren}\",\n      \"description\": \"Credit risk scoring for a French company: a default-risk score (0-100) at ~12 months from a transparent scorecard — filed financial ratios (structure, profitability, liquidity, net cash, debt service, trend), company age, and a hard BODACC override (open insolvency/liquidation, or closure for insufficiency of assets). Returns the score, a qualitative band, every component with its threshold, and a confidence level. Decision-support indicator — NOT a solvency opinion or credit rating.\",\n      \"mimeType\": \"application/json\",\n      \"serviceName\": \"Sirenic\",\n      \"tags\": [\n        \"france\",\n        \"credit-risk\",\n        \"default-score\",\n        \"insolvency-risk\",\n        \"scoring\"\n      ],\n      \"iconUrl\": \"https://api.sirenic.eu/logo.png\"\n    },\n    \"accepts\": [\n      {\n        \"scheme\": \"exact\",\n        \"network\": \"eip155:8453\",\n        \"amount\": \"100000\",\n        \"asset\": \"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\n        \"payTo\": \"0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2\",\n        \"maxTimeoutSeconds\": 120,\n        \"extra\": {\n          \"name\": \"USD Coin\",\n          \"version\": \"2\"\n        }\n      },\n      {\n        \"scheme\": \"exact\",\n        \"network\": \"eip155:8453\",\n        \"amount\": \"100000\",\n        \"asset\": \"0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42\",\n        \"payTo\": \"0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2\",\n        \"maxTimeoutSeconds\": 120,\n        \"extra\": {\n          \"name\": \"EURC\",\n          \"version\": \"2\"\n        }\n      }\n    ],\n    \"extensions\": {\n      \"bazaar\": {\n        \"info\": {\n          \"input\": {\n            \"type\": \"http\",\n            \"method\": \"GET\",\n            \"queryParams\": {},\n            \"pathParams\": {\n              \"siren\": \"552032534\"\n            }\n          },\n          \"output\": {\n            \"type\": \"json\",\n            \"example\": {\n              \"siren\": \"552032534\",\n              \"denomination\": \"DANONE\",\n              \"score_risque\": 22,\n              \"classe\": \"sain\",\n              \"risque_12m\": \"faible\",\n              \"composantes\": [\n                {\n                  \"axe\": \"liquidite\",\n                  \"indicateur\": \"ratio_liquidite_%\",\n                  \"valeur\": 7.093,\n                  \"seuil\": \"<80/<100\",\n                  \"points\": 12\n                },\n                {\n                  \"axe\": \"dette\",\n                  \"indicateur\": \"capacite_remboursement_annees\",\n                  \"valeur\": 19.515,\n                  \"seuil\": \"<0/>7/>4\",\n                  \"points\": 10\n                }\n              ],\n              \"exercice_reference\": \"2024-12-31\",\n              \"confiance\": \"moyenne\",\n              \"version_modele\": \"defaillance-v1.9\",\n              \"avertissement_perimetre\": \"Comptes SOCIAUX seuls : la santé du GROUPE n'est pas mesurée ; sur une tête de groupe, dette et liquidité peuvent être structurelles. Confiance plafonnée à « moyenne ». / Standalone STATUTORY accounts: GROUP health is not measured; on a group parent, debt and liquidity may be structural. Confidence capped at medium.\",\n              \"signaux_bodacc\": {\n                \"procedure_collective\": false,\n                \"liquidation_judiciaire\": false,\n                \"cloture_insuffisance_actif\": false\n              },\n              \"data_freshness\": \"identité stock Sirene (2026-07-01) + ratios financiers + BODACC temps réel\"\n            }\n          }\n        },\n        \"schema\": {\n          \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n          \"type\": \"object\",\n          \"properties\": {\n            \"input\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"type\": {\n                  \"type\": \"string\",\n                  \"const\": \"http\"\n                },\n                \"method\": {\n                  \"type\": \"string\",\n                  \"enum\": [\n                    \"GET\"\n                  ]\n                },\n                \"queryParams\": {\n                  \"type\": \"object\",\n                  \"properties\": {}\n                },\n                \"pathParams\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"siren\": {\n                      \"type\": \"string\",\n                      \"description\": \"9-digit SIREN (9 digits, Luhn-checked), e.g. 552032534\"\n                    }\n                  },\n                  \"required\": [\n                    \"siren\"\n                  ]\n                }\n              },\n              \"required\": [\n                \"type\",\n                \"method\"\n              ],\n              \"additionalProperties\": false\n            },\n            \"output\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"type\": {\n                  \"type\": \"string\"\n                },\n                \"example\": {\n                  \"type\": \"object\"\n                }\n              },\n              \"required\": [\n                \"type\"\n              ]\n            }\n          },\n          \"required\": [\n            \"input\"\n          ]\n        },\n        \"routeTemplate\": \"/v1/score/defaillance/:siren\"\n      }\n    }\n  },\n  \"free_tier\": {\n    \"summary\": \"Free API key, no card: 150 calls a month on routes at $0.05 or less, not this one (priced above $0.05). https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp\",\n    \"monthly_calls\": 150,\n    \"max_price_per_call\": \"$0.05\",\n    \"this_route\": false,\n    \"excluded_because\": \"prix\",\n    \"signup_url\": \"https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp\",\n    \"eligible_routes_url\": \"https://api.sirenic.eu/en/offres#grille\"\n  }\n}"
+      }
+    ],
+    "structuredContent": {
+      "payment_required": true,
+      "hint": "Free API key, no card: 150 calls a month on routes at $0.05 or less, not this one (priced above $0.05). https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp Settle this x402 quote (sign a USDC or EURC payment matching one of the `accepts` entries — the EURC amount is the same figure as the USDC one, numeric parity, not FX-converted) and call the tool again with the resulting PAYMENT-SIGNATURE header value in `x_payment`. Paying in EURC requires an explicit client opt-in since @x402/core 2.23 (spendControls.allowedAssets), otherwise your client silently keeps the USDC option. Set allowedAssets[].maxAmountPerPayment as well (integer ATOMIC amount, e.g. \"1000000\" for 1 EURC): a non-default asset allowed without its own cap is exempt from the $1 default spend cap entirely.",
+      "quote": {
+        "x402Version": 2,
+        "error": "Payment required",
+        "resource": {
+          "url": "https://api.sirenic.eu/v1/score/defaillance/{siren}",
+          "description": "Credit risk scoring for a French company: a default-risk score (0-100) at ~12 months from a transparent scorecard — filed financial ratios (structure, profitability, liquidity, net cash, debt service, trend), company age, and a hard BODACC override (open insolvency/liquidation, or closure for insufficiency of assets). Returns the score, a qualitative band, every component with its threshold, and a confidence level. Decision-support indicator — NOT a solvency opinion or credit rating.",
+          "mimeType": "application/json",
+          "serviceName": "Sirenic",
+          "tags": [
+            "france",
+            "credit-risk",
+            "default-score",
+            "insolvency-risk",
+            "scoring"
+          ],
+          "iconUrl": "https://api.sirenic.eu/logo.png"
+        },
+        "accepts": [
+          {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "amount": "100000",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "payTo": "0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2",
+            "maxTimeoutSeconds": 120,
+            "extra": {
+              "name": "USD Coin",
+              "version": "2"
+            }
+          },
+          {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "amount": "100000",
+            "asset": "0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42",
+            "payTo": "0x76A672EEe56D29D475b0715cc03B8C99D70EC8A2",
+            "maxTimeoutSeconds": 120,
+            "extra": {
+              "name": "EURC",
+              "version": "2"
+            }
+          }
+        ],
+        "extensions": {
+          "bazaar": {
+            "info": {
+              "input": {
+                "type": "http",
+                "method": "GET",
+                "queryParams": {},
+                "pathParams": {
+                  "siren": "552032534"
+                }
+              },
+              "output": {
+                "type": "json",
+                "example": {
+                  "siren": "552032534",
+                  "denomination": "DANONE",
+                  "score_risque": 22,
+                  "classe": "sain",
+                  "risque_12m": "faible",
+                  "composantes": [
+                    {
+                      "axe": "liquidite",
+                      "indicateur": "ratio_liquidite_%",
+                      "valeur": 7.093,
+                      "seuil": "<80/<100",
+                      "points": 12
+                    },
+                    {
+                      "axe": "dette",
+                      "indicateur": "capacite_remboursement_annees",
+                      "valeur": 19.515,
+                      "seuil": "<0/>7/>4",
+                      "points": 10
+                    }
+                  ],
+                  "exercice_reference": "2024-12-31",
+                  "confiance": "moyenne",
+                  "version_modele": "defaillance-v1.9",
+                  "avertissement_perimetre": "Comptes SOCIAUX seuls : la santé du GROUPE n'est pas mesurée ; sur une tête de groupe, dette et liquidité peuvent être structurelles. Confiance plafonnée à « moyenne ». / Standalone STATUTORY accounts: GROUP health is not measured; on a group parent, debt and liquidity may be structural. Confidence capped at medium.",
+                  "signaux_bodacc": {
+                    "procedure_collective": false,
+                    "liquidation_judiciaire": false,
+                    "cloture_insuffisance_actif": false
+                  },
+                  "data_freshness": "identité stock Sirene (2026-07-01) + ratios financiers + BODACC temps réel"
+                }
+              }
+            },
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "http"
+                    },
+                    "method": {
+                      "type": "string",
+                      "enum": [
+                        "GET"
+                      ]
+                    },
+                    "queryParams": {
+                      "type": "object",
+                      "properties": {}
+                    },
+                    "pathParams": {
+                      "type": "object",
+                      "properties": {
+                        "siren": {
+                          "type": "string",
+                          "description": "9-digit SIREN (9 digits, Luhn-checked), e.g. 552032534"
+                        }
+                      },
+                      "required": [
+                        "siren"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "method"
+                  ],
+                  "additionalProperties": false
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "example": {
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                }
+              },
+              "required": [
+                "input"
+              ]
+            },
+            "routeTemplate": "/v1/score/defaillance/:siren"
+          }
+        }
+      },
+      "free_tier": {
+        "summary": "Free API key, no card: 150 calls a month on routes at $0.05 or less, not this one (priced above $0.05). https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp",
+        "monthly_calls": 150,
+        "max_price_per_call": "$0.05",
+        "this_route": false,
+        "excluded_because": "prix",
+        "signup_url": "https://api.sirenic.eu/compte?utm_source=402&utm_campaign=mcp",
+        "eligible_routes_url": "https://api.sirenic.eu/en/offres#grille"
+      }
+    },
+    "isError": false
+  }
+}

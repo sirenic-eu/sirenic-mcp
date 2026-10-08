@@ -1,0 +1,60 @@
+{
+  "name": "@sirenic/mcp",
+  "version": "0.1.0",
+  "description": "Local MCP server for Sirenic: official company registers of 20 European countries for AI agents, paid per call by API key or x402.",
+  "license": "MIT",
+  "author": "Sirenic (sirenic.eu)",
+  "homepage": "https://api.sirenic.eu/connecteurs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sirenic-eu/sirenic-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sirenic-eu/sirenic-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "x402",
+    "company-data",
+    "kyb",
+    "europe",
+    "ai-agents"
+  ],
+  "mcpName": "eu.sirenic/sirenic",
+  "type": "module",
+  "bin": {
+    "sirenic-mcp": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "catalogue/instantane.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "instantane": "tsx scripts/instantane.ts",
+    "tableau": "tsx scripts/tableau.ts",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@x402/core": "2.28.0",
+    "@x402/evm": "2.28.0",
+    "viem": "2.57.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.34",
+    "tsx": "4.23.15",
+    "typescript": "5.8.3",
+    "vitest": "5.0.3"
+  }
+}
