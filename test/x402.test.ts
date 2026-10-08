@@ -56,6 +56,25 @@ describe("x402 rail", () => {
     expect(calls.every((c) => c.headers["user-agent"]?.startsWith("sirenic-mcp-npm/"))).toBe(true);
   });
 
+  it("the receipt is the server's only: a paid call whose server attaches none returns none, nor does a refusal by the cap", async () => {
+    const t = await localServer(
+      { SIRENIC_WALLET_KEY: KEY },
+      {
+        tools: REMOTE.tools,
+        onCall: (name, args): CallAnswer =>
+          args.x_payment ? { result: dataResult() } : { result: name === "search_french_companies" ? QUOTES.search_french_companies : QUOTES.get_french_company_default_risk },
+      },
+    );
+    close = t.close;
+    const paid = await t.client.callTool({ name: "search_french_companies", arguments: { q: "danone" } });
+    expect(paid.isError).toBe(false);
+    expect(t.local.spent).toBe(2000n);
+    expect(paid._meta?.["x402/payment-response"]).toBeUndefined();
+    const capped = await t.client.callTool({ name: "get_french_company_default_risk", arguments: { siren: "552032534" } });
+    expect(errorOf(capped).error).toBe("plafond_depasse");
+    expect(capped._meta?.["x402/payment-response"]).toBeUndefined();
+  });
+
   it("a $0.10 quote is above the $0.05 cap per call: plafond_depasse with the price and the variable, nothing signed", async () => {
     const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, server(QUOTES.get_french_company_default_risk, () => ({ result: dataResult() })));
     close = t.close;
@@ -188,6 +207,14 @@ describe("no rail", () => {
     expect(s.hint).toContain("SIRENIC_API_KEY");
     expect(s.hint).toContain("SIRENIC_WALLET_KEY");
     expect(t.remote.calls().length).toBe(1);
+  });
+
+  it("paiement_requis carries no receipt: nothing was paid", async () => {
+    const t = await localServer({}, { tools: REMOTE.tools, onCall: () => ({ result: QUOTES.search_french_companies }) });
+    close = t.close;
+    const r = await t.client.callTool({ name: "search_french_companies", arguments: { q: "danone" } });
+    expect((r.structuredContent as { payment_required: boolean }).payment_required).toBe(true);
+    expect(r._meta?.["x402/payment-response"]).toBeUndefined();
   });
 
   it("a free tool answers as the server sends it", async () => {
