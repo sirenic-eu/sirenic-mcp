@@ -4,7 +4,7 @@
   "description": "Local MCP server for Sirenic: official company registers of 20 European countries for AI agents, paid per call by API key or x402.",
   "license": "MIT",
   "author": "Sirenic (sirenic.eu)",
-  "homepage": "https://api.sirenic.eu/connecteurs",
+  "homepage": "https://api.sirenic.eu/en/connectors",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sirenic-eu/sirenic-mcp.git"

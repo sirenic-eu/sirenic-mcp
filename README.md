@@ -36,7 +36,7 @@ company and tell me whether I can pay."*
 
 Prefer a remote server? Clients that speak streamable HTTP can use `https://api.sirenic.eu/mcp` directly (each
 tool takes an `x_payment` argument), or the OAuth connector `https://api.sirenic.eu/mcp/connecteur`: see
-[api.sirenic.eu/connecteurs](https://api.sirenic.eu/en/connectors).
+[api.sirenic.eu/en/connectors](https://api.sirenic.eu/en/connectors).
 
 ## Two ways to pay
 
