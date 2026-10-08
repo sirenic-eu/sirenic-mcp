@@ -25,6 +25,15 @@ jobs:
       - name: Tests (no network)
         run: npm test
 
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image (the Dockerfile MCP catalogues build from source)
+        run: docker build -t sirenic-mcp .
+      - name: The image starts
+        run: docker run --rm sirenic-mcp --version
+
   gitleaks:
     runs-on: ubuntu-latest
     steps:

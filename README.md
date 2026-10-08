@@ -231,6 +231,10 @@ If this server saved you a lookup, a star helps other developers find it.
 
 Issues and pull requests are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). Tests run without network.
 
+A `Dockerfile` is provided for MCP catalogues that build servers from source (Glama). It is built only by the CI of
+this repository (job `docker`, which also starts the image) and by the catalogue itself: the maintainers do not build
+it on their own machines.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Data licences are those of each register, cited in every response.
