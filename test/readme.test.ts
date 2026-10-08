@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { routePrices } from "../src/catalogue.js";
 import { ERROR_CODES } from "../src/errors.js";
+import { PACKAGE_NAME } from "../src/version.js";
 import { priceLabel, replaceToolsTable } from "../scripts/tableau-lib.js";
 import { QUOTES, SNAPSHOT } from "./helpers/fixtures.js";
 
@@ -60,6 +61,11 @@ describe("README", () => {
     }
     expect(README).not.toMatch(/srn_live_[A-Za-z0-9]{8,}/);
     expect(README).not.toMatch(/0x[0-9a-fA-F]{64}/);
-    expect(README).toContain("npx -y @sirenic/mcp");
+    // the npm name comes from package.json: changing its `name` (fallback B of G1) fails here until each line follows
+    expect(README).toContain(`\`${PACKAGE_NAME}\` is a local [Model Context Protocol]`);
+    expect(README).toContain(`"args": ["-y", "${PACKAGE_NAME}"]`);
+    expect(README).toContain(`claude mcp add sirenic -e SIRENIC_API_KEY=srn_live_... -- npx -y ${PACKAGE_NAME}\n`);
+    expect([...README.matchAll(/npx -y (\S+)/g)].map((m) => m[1])).toEqual([PACKAGE_NAME]);
+    expect([...README.matchAll(/"args": \["-y", "([^"]+)"\]/g)].map((m) => m[1])).toEqual([PACKAGE_NAME]);
   });
 });

@@ -1,6 +1,14 @@
-/** Package identity. The version is checked against package.json by test/config.test.ts. */
-export const PACKAGE_NAME = "@sirenic/mcp";
-export const PACKAGE_VERSION = "0.1.0";
+/**
+ * Package identity, read from package.json: its `name` is the only field to change if the npm name changes
+ * (`@sirenic/mcp`, or `sirenic-mcp` without a scope), and test/readme.test.ts then names the README lines that must
+ * follow. package.json ships in every npm package and in the Docker image, next to dist/.
+ */
+import { readFileSync } from "node:fs";
+
+const manifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as { name: string; version: string };
+
+export const PACKAGE_NAME: string = manifest.name;
+export const PACKAGE_VERSION: string = manifest.version;
 
 /**
  * How this package introduces itself to the Sirenic server: MCP `clientInfo.name` and HTTP `User-Agent`.
