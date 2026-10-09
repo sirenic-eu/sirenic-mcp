@@ -1,5 +1,7 @@
 # Sirenic MCP server
 
+![Claude Code, with this server installed from npm, builds a prospecting list, checks the first company and pays both calls in x402](media/demo.gif)
+
 **Who should we prospect in France, and can we work with this client?** Ask your agent. With this server it
 [builds the list from the official French register](https://api.sirenic.eu/en/use-cases/build-b2b-prospecting-list-from-official-french-registry)
 (activity code, area, legal form, workforce, age, certifications), then checks the company you are about to sign:

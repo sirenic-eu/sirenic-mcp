@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.0 (2026-10-09)
 
 - Local MCP server (stdio) reflecting the tools of the Sirenic server (`tools/list` read at startup, payment
   arguments removed, `_meta` with each tool's routes and prices).
