@@ -1,7 +1,10 @@
 # Sirenic MCP server
 
-**Can I safely pay this supplier?** Ask your agent. With this server it checks the official company registers of
-France and Europe, VAT numbers, IBANs and sanctions lists, then answers with a citation of the register it read.
+**Who should we prospect in France, and can we work with this client?** Ask your agent. With this server it
+[builds the list from the official French register](https://api.sirenic.eu/en/use-cases/build-b2b-prospecting-list-from-official-french-registry)
+(activity code, area, legal form, workforce, age, certifications), then checks the company you are about to sign:
+registers of France and Europe, officers, legal notices, VAT number and sanctions lists, with a citation of the
+register it read.
 Each call is paid on its own: with a free API key, or in USDC from a local x402 wallet, without an account.
 
 `sirenic-mcp` is a local [Model Context Protocol](https://modelcontextprotocol.io) server (stdio) for Claude
@@ -31,8 +34,8 @@ Claude Code, in one line:
 claude mcp add sirenic -e SIRENIC_API_KEY=srn_live_... -- npx -y sirenic-mcp
 ```
 
-Node.js 22 or later. Then ask, for example: *"I am about to pay an invoice from DANONE, SIREN 552032534. Check the
-company and tell me whether I can pay."*
+Node.js 22 or later. Then ask, for example: *"List active software companies (NAF 62.01Z) in the Rhône department
+with 10 to 49 employees, then check the first one before we contact them."*
 
 Prefer a remote server? Clients that speak streamable HTTP can use `https://api.sirenic.eu/mcp` directly (each
 tool takes an `x_payment` argument), or the OAuth connector `https://api.sirenic.eu/mcp/connecteur`: see
