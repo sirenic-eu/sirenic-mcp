@@ -57,7 +57,7 @@ describe("configuration", () => {
     const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as { name: string; version: string; mcpName: string; license: string };
     expect(pkg.name).toBe(PACKAGE_NAME);
     expect(pkg.version).toBe(PACKAGE_VERSION);
-    // the npm name is written once, in package.json (letter G1 of #532: @sirenic/mcp, or sirenic-mcp as fallback B)
+    // the npm name is written once, in package.json (letter G1 B of #532: sirenic-mcp, without a scope)
     expect(readFileSync(new URL("../src/version.ts", import.meta.url), "utf8")).not.toContain(`"${PACKAGE_NAME}"`);
     expect(pkg.mcpName).toBe("eu.sirenic/sirenic");
     expect(pkg.license).toBe("MIT");

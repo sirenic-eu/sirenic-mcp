@@ -61,7 +61,7 @@ describe("README", () => {
     }
     expect(README).not.toMatch(/srn_live_[A-Za-z0-9]{8,}/);
     expect(README).not.toMatch(/0x[0-9a-fA-F]{64}/);
-    // the npm name comes from package.json: changing its `name` (fallback B of G1) fails here until each line follows
+    // the npm name comes from package.json: changing its `name` fails here until each line follows
     expect(README).toContain(`\`${PACKAGE_NAME}\` is a local [Model Context Protocol]`);
     expect(README).toContain(`"args": ["-y", "${PACKAGE_NAME}"]`);
     expect(README).toContain(`claude mcp add sirenic -e SIRENIC_API_KEY=srn_live_... -- npx -y ${PACKAGE_NAME}\n`);

@@ -1,6 +1,6 @@
 /**
  * Package identity, read from package.json: its `name` is the only field to change if the npm name changes
- * (`@sirenic/mcp`, or `sirenic-mcp` without a scope), and test/readme.test.ts then names the README lines that must
+ * (`sirenic-mcp`, without a scope: letter G1 B of #532), and test/readme.test.ts then names the README lines that must
  * follow. package.json ships in every npm package and in the Docker image, next to dist/.
  */
 import { readFileSync } from "node:fs";

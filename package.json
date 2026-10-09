@@ -1,5 +1,5 @@
 {
-  "name": "@sirenic/mcp",
+  "name": "sirenic-mcp",
   "version": "0.1.0",
   "description": "Local MCP server for Sirenic: official company registers of 20 European countries for AI agents, paid per call by API key or x402.",
   "license": "MIT",

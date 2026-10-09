@@ -4,7 +4,7 @@
 France and Europe, VAT numbers, IBANs and sanctions lists, then answers with a citation of the register it read.
 Each call is paid on its own: with a free API key, or in USDC from a local x402 wallet, without an account.
 
-`@sirenic/mcp` is a local [Model Context Protocol](https://modelcontextprotocol.io) server (stdio) for Claude
+`sirenic-mcp` is a local [Model Context Protocol](https://modelcontextprotocol.io) server (stdio) for Claude
 Desktop, Cursor, Claude Code and any MCP client that starts a local server. It serves the same tools as the hosted
 Sirenic server (`https://api.sirenic.eu/mcp`) and pays for them on your behalf, within caps you set.
 
@@ -18,7 +18,7 @@ Nothing to clone. In your client's MCP configuration (`claude_desktop_config.jso
   "mcpServers": {
     "sirenic": {
       "command": "npx",
-      "args": ["-y", "@sirenic/mcp"],
+      "args": ["-y", "sirenic-mcp"],
       "env": { "SIRENIC_API_KEY": "srn_live_..." }
     }
   }
@@ -28,7 +28,7 @@ Nothing to clone. In your client's MCP configuration (`claude_desktop_config.jso
 Claude Code, in one line:
 
 ```bash
-claude mcp add sirenic -e SIRENIC_API_KEY=srn_live_... -- npx -y @sirenic/mcp
+claude mcp add sirenic -e SIRENIC_API_KEY=srn_live_... -- npx -y sirenic-mcp
 ```
 
 Node.js 22 or later. Then ask, for example: *"I am about to pay an invoice from DANONE, SIREN 552032534. Check the
