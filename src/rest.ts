@@ -2,7 +2,7 @@
  * The call of a tool, made by the package itself on the Sirenic REST API: the request the shared analyser
  * (appel-outil.ts) gives for the tool's call template and the arguments, sent to the API's origin, and the answer read
  * back into a tool result the way the hosted Sirenic MCP server renders it (JSON data or error, PDF in base64, Markdown
- * as is). This module holds the only `fetch(` of the package.
+ * as is). This module holds the only HTTP call of the package outside the MCP client transport (remote.ts).
  *
  * What travels: `Accept` from the template, `User-Agent: sirenic-mcp-npm/<version>` (the API counts the package's sales
  * apart), and either `X-Api-Key` (key rail) or `PAYMENT-SIGNATURE` (x402 rail, a quote signed by server.ts). Only GET,

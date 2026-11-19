@@ -3,7 +3,8 @@ import dgram from "node:dgram";
 import dns from "node:dns";
 import net from "node:net";
 import { describe, expect, it } from "vitest";
-import { fakeRemote, UnregisteredAddress } from "./helpers/fake-remote.js";
+import { fakeApi } from "./helpers/fake-api.js";
+import { UnregisteredAddress } from "./helpers/fake-remote.js";
 import { NetworkDisabled } from "./setup-no-network.js";
 
 describe("no network in tests", () => {
@@ -27,10 +28,11 @@ describe("no network in tests", () => {
     expect(() => dgram.createSocket("udp4")).toThrow(NetworkDisabled);
   });
 
-  it("the simulated server refuses every address it was not given", async () => {
-    const remote = fakeRemote({ tools: [], endpoints: ["https://api.sirenic.eu/mcp"] });
-    await expect(remote.fetch("https://api.sirenic.eu/v1/recherche?q=danone")).rejects.toBeInstanceOf(UnregisteredAddress);
-    await expect(remote.fetch("https://example.org/mcp")).rejects.toBeInstanceOf(UnregisteredAddress);
-    expect(remote.requests).toEqual([]);
+  it("the simulated API refuses every address outside /v1 of its origin, and /mcp unless it was given a tool list", async () => {
+    const api = fakeApi({});
+    await expect(api.fetch("https://api.sirenic.eu/mcp", { method: "POST" })).rejects.toBeInstanceOf(UnregisteredAddress);
+    await expect(api.fetch("https://example.org/v1/recherche?q=danone")).rejects.toBeInstanceOf(UnregisteredAddress);
+    await expect(api.fetch("https://api.sirenic.eu/compte")).rejects.toBeInstanceOf(UnregisteredAddress);
+    expect(api.requests).toEqual([]);
   });
 });

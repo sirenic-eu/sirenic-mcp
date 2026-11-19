@@ -45,12 +45,13 @@ type ShapeName = keyof typeof SHAPES;
 async function oracle(): Promise<{ schemas: Record<ShapeName, unknown>; parse(name: ShapeName, args: unknown): Promise<{ ok: true; value: unknown } | { ok: false }> }> {
   const server = new McpServer({ name: "oracle", version: "0.0.0" });
   let seen: unknown;
-  for (const [name, shape] of Object.entries(SHAPES)) {
-    server.registerTool(name, { inputSchema: shape }, async (args) => {
-      seen = args;
-      return { content: [{ type: "text", text: "ok" }] };
-    });
-  }
+  const handler = async (args: unknown) => {
+    seen = args;
+    return { content: [{ type: "text" as const, text: "ok" }] };
+  };
+  server.registerTool("identite", { inputSchema: SHAPES.identite }, handler);
+  server.registerTool("liste", { inputSchema: SHAPES.liste }, handler);
+  server.registerTool("criteres", { inputSchema: SHAPES.criteres }, handler);
   const [a, b] = InMemoryTransport.createLinkedPair();
   await server.connect(b);
   const client = new Client({ name: "oracle-client", version: "0.0.0" });
