@@ -38,6 +38,10 @@ const SHAPES = {
       .max(4),
     webhook: z.string().url().optional(),
   },
+  // two options that overlap: zod keeps the first that accepts the value, and strips what that option does not declare
+  union: {
+    forme: z.union([z.object({ a: z.string() }), z.object({ a: z.string(), b: z.string() })]),
+  },
 } as const;
 
 type ShapeName = keyof typeof SHAPES;
@@ -52,6 +56,7 @@ async function oracle(): Promise<{ schemas: Record<ShapeName, unknown>; parse(na
   server.registerTool("identite", { inputSchema: SHAPES.identite }, handler);
   server.registerTool("liste", { inputSchema: SHAPES.liste }, handler);
   server.registerTool("criteres", { inputSchema: SHAPES.criteres }, handler);
+  server.registerTool("union", { inputSchema: SHAPES.union }, handler);
   const [a, b] = InMemoryTransport.createLinkedPair();
   await server.connect(b);
   const client = new Client({ name: "oracle-client", version: "0.0.0" });
@@ -91,6 +96,8 @@ const CASES: Array<[ShapeName, unknown]> = [
   ["criteres", { criteres: [{ champ: "pays", valeur: "FR" }] }],
   ["criteres", { criteres: [], webhook: "not a url" }],
   ["criteres", { criteres: [{ champ: "naf", valeur: true }], extra: [1, 2] }],
+  ["union", { forme: { a: "x", b: "y" } }],
+  ["union", { forme: { b: "y" } }],
 ];
 
 describe("Q4 A: the arguments read with the hosted server's semantics", () => {

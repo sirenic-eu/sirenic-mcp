@@ -212,6 +212,8 @@ export class SirenicServer {
       }
       if (signal?.aborted) return cancelled();
       const paid = await api.send(chemin, accept, signed.header, signal);
+      // Cancelled before the signed request left: nothing was sent, nothing is counted.
+      if (paid.kind === "cancelled" && !paid.sent) return cancelled();
       if (paid.kind !== "answer") {
         reservation.settle();
         return uncertain(

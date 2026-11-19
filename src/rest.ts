@@ -40,8 +40,8 @@ export interface ApiAnswer {
 
 export type Sent =
   | { kind: "answer"; answer: ApiAnswer }
-  /** The client's signal fired: the request was not sent, or was cut. */
-  | { kind: "cancelled" }
+  /** The client's signal fired: before the request left (`sent` false), or while it was in flight (`sent` true). */
+  | { kind: "cancelled"; sent: boolean }
   | { kind: "unreachable"; detail: string };
 
 export class InvariantError extends Error {}
@@ -66,7 +66,7 @@ export class SirenicApi {
     const headers: Record<string, string> = { Accept: accept, "User-Agent": USER_AGENT };
     if (payment !== undefined) headers["PAYMENT-SIGNATURE"] = payment;
     else if (this.options.apiKey !== undefined) headers["X-Api-Key"] = this.options.apiKey;
-    if (signal?.aborted) return { kind: "cancelled" };
+    if (signal?.aborted) return { kind: "cancelled", sent: false };
     const timeout = AbortSignal.timeout(this.options.callTimeoutMs ?? CALL_TIMEOUT_MS);
     const combined = signal ? AbortSignal.any([signal, timeout]) : timeout;
     const fetchFn = this.options.fetch ?? globalThis.fetch;
@@ -75,7 +75,7 @@ export class SirenicApi {
       const bytes = new Uint8Array(await response.arrayBuffer());
       return { kind: "answer", answer: { status: response.status, contentType: response.headers.get("content-type") ?? "", headers: response.headers, bytes } };
     } catch (error) {
-      if (signal?.aborted) return { kind: "cancelled" };
+      if (signal?.aborted) return { kind: "cancelled", sent: true };
       if (timeout.aborted) return { kind: "unreachable", detail: "timeout" };
       return { kind: "unreachable", detail: error instanceof Error ? error.message : String(error) };
     }

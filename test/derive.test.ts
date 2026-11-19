@@ -54,6 +54,12 @@ describe("drift guard", () => {
     expect(report).not.toContain("—");
   });
 
+  it("the server's instructions alone changed: a drift", () => {
+    const drift = compareSnapshot(SNAPSHOT, read(copy(), { instructions: "Other instructions." }));
+    expect(drift.changed).toEqual([]);
+    expect(hasDrift(drift)).toBe(true);
+  });
+
   it("the fingerprint depends on the differences, not on the date of the read", () => {
     const tools = copy();
     tools[0]!.description = "Changed";

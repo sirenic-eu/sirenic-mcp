@@ -6,9 +6,10 @@
  */
 import { afterEach, describe, expect, it } from "vitest";
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { ERROR_TEXT_LIMIT } from "../src/rest.js";
+import { ERROR_TEXT_LIMIT, SirenicApi } from "../src/rest.js";
+import { fakeApi } from "./helpers/fake-api.js";
 import { USER_AGENT } from "../src/version.js";
-import { SNAPSHOT, dataReply, errorReply, paymentResponseHeader } from "./helpers/fixtures.js";
+import { DEVIS, SNAPSHOT, dataReply, errorReply, paymentResponseHeader } from "./helpers/fixtures.js";
 import { localServer, resultOf } from "./helpers/local.js";
 
 let close: (() => Promise<void>) | undefined;
@@ -207,5 +208,50 @@ describe("refusals before any request", () => {
     close = t.close;
     await expect(t.client.callTool({ name: "no_such_tool", arguments: {} })).rejects.toThrow(/Unknown tool/);
     expect(t.api.requests).toEqual([]);
+  });
+});
+
+describe("the REST client (rest.ts)", () => {
+  const BASE_URL = new URL("https://api.sirenic.eu");
+
+  it("a signed request never carries the API key, and the key goes only with an unsigned request", async () => {
+    const fake = fakeApi({ onRequest: () => dataReply() });
+    const api = new SirenicApi({ baseUrl: BASE_URL, apiKey: "srn_live_test-key-not-real", fetch: fake.fetch });
+    await api.send("/v1/entreprise/552032534", "application/json", "signed-payment");
+    await api.send("/v1/entreprise/552032534", "application/json", undefined);
+    expect(fake.requests[0]!.headers["payment-signature"]).toBe("signed-payment");
+    expect(fake.requests[0]!.headers["x-api-key"]).toBeUndefined();
+    expect(fake.requests[1]!.headers["x-api-key"]).toBe("srn_live_test-key-not-real");
+  });
+
+  it("a cancelled signal: nothing leaves (sent false); cut in flight: sent true", async () => {
+    const fake = fakeApi({ onRequest: () => ({ hang: true }) });
+    const api = new SirenicApi({ baseUrl: BASE_URL, fetch: fake.fetch });
+    const before = new AbortController();
+    before.abort();
+    expect(await api.send("/v1/entreprise/552032534", "application/json", "x", before.signal)).toEqual({ kind: "cancelled", sent: false });
+    expect(fake.requests).toEqual([]);
+    const during = new AbortController();
+    setTimeout(() => during.abort(), 10);
+    expect(await api.send("/v1/entreprise/552032534", "application/json", "x", during.signal)).toEqual({ kind: "cancelled", sent: true });
+    expect(fake.requests.length).toBe(1);
+  });
+
+  it("only a path under /v1/ of the configured origin is sent", () => {
+    const api = new SirenicApi({ baseUrl: BASE_URL });
+    expect(() => api.url("/mcp")).toThrow(/outside \/v1\//);
+    expect(() => api.url("/v1/../mcp")).toThrow(/outside the API's origin/);
+    expect(api.url("/v1/recherche?q=a").href).toBe("https://api.sirenic.eu/v1/recherche?q=a");
+  });
+
+  it("a PAYMENT-REQUIRED header on an answer that is not a 402 is not a quote: the data is served", async () => {
+    const header = DEVIS.answers.search_french_companies.headers["payment-required"]!;
+    const t = await localServer({ SIRENIC_WALLET_KEY: `0x${"11".repeat(32)}` }, { onRequest: () => dataReply({ resultats: [] }, { "payment-required": header }) });
+    close = t.close;
+    const r = await t.client.callTool({ name: "search_french_companies", arguments: { q: "danone" } });
+    expect(r.isError).toBe(false);
+    expect(r.structuredContent).toEqual({ payment_required: false, resultat: { resultats: [] } });
+    expect(t.api.requests.length).toBe(1);
+    expect(t.local.spent).toBe(0n);
   });
 });
