@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 /**
- * sirenic-mcp: the Sirenic MCP server, local (stdio). Configuration by environment variables only (see README).
- * stdout carries the MCP protocol; every human line goes to stderr, and never prints a secret.
+ * sirenic-mcp: the Sirenic MCP server, local (stdio). Its tools are defined in this package (catalogue/instantane.json)
+ * and each one calls the Sirenic REST API and pays, by API key or x402. Configuration by environment variables only
+ * (see README). stdout carries the MCP protocol; every human line goes to stderr, and never prints a secret.
  */
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { ConfigError, readConfig } from "./config.js";
 import { formatUsd } from "./money.js";
 import { RemoteServer } from "./remote.js";
+import { SirenicApi } from "./rest.js";
 import { SirenicServer } from "./server.js";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "./version.js";
 
@@ -43,18 +45,19 @@ async function main(): Promise<void> {
     return;
   }
   for (const note of config.notes) err(note);
-  const remote = new RemoteServer({ baseUrl: config.baseUrl, ...(config.apiKey ? { apiKey: config.apiKey } : {}) });
-  const local = await SirenicServer.start({ config, remote, log: err });
+  const api = new SirenicApi({ baseUrl: config.baseUrl, ...(config.rail === "key" && config.apiKey ? { apiKey: config.apiKey } : {}) });
+  const remote = new RemoteServer({ baseUrl: config.baseUrl });
+  const local = await SirenicServer.start({ config, api, remote, log: err });
   const c = local.tools;
   err(
-    `${PACKAGE_VERSION}, ${c.tools.length} tools from ${c.source === "remote" ? `${remote.endpoint.href} (server ${c.serverVersion ?? "?"})` : `the snapshot of ${c.snapshotDate}`}, rail: ${config.rail}` +
+    `${PACKAGE_VERSION}, ${c.tools.length} tools from the snapshot of ${c.snapshotDate} (server ${c.serverVersion})` +
+      `${c.refreshed ? `, list refreshed from ${remote.endpoint.href}` : ""}, calls to ${config.baseUrl.origin}/v1, rail: ${config.rail}` +
       (config.rail === "wallet" ? ` (caps ${formatUsd(config.maxPerCall)} per call, ${formatUsd(config.maxPerSession)} per session)` : ""),
   );
   const transport = new StdioServerTransport();
   await local.server.connect(transport);
   const stop = async (): Promise<void> => {
     await local.server.close().catch(() => undefined);
-    await remote.close();
   };
   process.stdin.on("end", () => void stop());
   process.on("SIGINT", () => void stop().then(() => process.exit(0)));
