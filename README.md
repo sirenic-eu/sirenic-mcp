@@ -64,7 +64,8 @@ wallet holding only what you are ready to spend.
 | `SIRENIC_MAX_PAR_APPEL` | `SIRENIC_MAX_PER_CALL` | `0.05` | The most a single call may cost, in USD. |
 | `SIRENIC_MAX_PAR_SESSION` | `SIRENIC_MAX_PER_SESSION` | `0.50` | The most the server process may spend, in USD. |
 
-A quote above a cap is refused before anything is signed. The tool answers `plafond_depasse` with the quoted price,
+The wallet signs only the `exact` scheme in USDC on Base: a quote without such an option is refused
+(`paiement_refuse`), nothing signed. A quote above a cap is refused before anything is signed. The tool answers `plafond_depasse` with the quoted price,
 the cap and the variable to raise; the tool list itself is unchanged (tools above the cap stay listed). Most tools
 cost $0.05 or less. The session cap counts the calls in progress too: a price is held against it before the
 signature, so calls sent together never spend more than the cap. A payment whose outcome is unknown (the connection
@@ -81,10 +82,13 @@ the session cap and is never replayed.
 - **Each call is a REST call.** The arguments are read through the tool's input schema (unknown keys dropped, defaults
   applied, the same reading as the hosted server); the call template turns them into a `GET` under
   `https://api.sirenic.eu/v1/` (the analyser in `src/appel-outil.ts` is the one the hosted server uses, and both play
-  the same test vectors). The paywall is the API's: this package never builds a quote, and only signs a quote the
+  the same test vectors). A served schema cannot say that an identifier is matched case-insensitively: a value that
+  fits its pattern only in another case is sent, and the API judges it (an invalid value is answered 400, never
+  charged). The paywall is the API's: this package never builds a quote, and only signs a quote the
   API returned, under your caps. Redirects are never followed.
-- **Answers as the hosted server renders them.** JSON data in `structuredContent.resultat` and as text, a PDF in
-  base64, Markdown as is; an error of the API with its `statut_http`. A call paid in x402 and settled returns the
+- **Answers as the hosted server renders them.** JSON data in `structuredContent.resultat` and as text (compact
+  beyond 20,000 characters, so a large batch stays readable by the client), a PDF in base64, Markdown as is; an error
+  of the API with its `statut_http`. A call paid in x402 and settled returns the
   API's settlement receipt in `_meta["x402/payment-response"]` (transaction, network, payer); a payment that is not
   settled returns none, and this package never makes one up.
 - **The list stays up to date.** At startup, when it answers, the hosted `tools/list` (`https://api.sirenic.eu/mcp`,

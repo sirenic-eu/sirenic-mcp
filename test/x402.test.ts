@@ -183,6 +183,14 @@ describe("M1: after a signature, an outcome that may have paid counts against th
     expect(t.api.requests.filter(signedOf).length).toBe(1);
   });
 
+  it("a refusal body that is not consistent (no outcome, no attempts) is undetermined: counted", async () => {
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, api("search_french_companies", () => errorReply(402, { x402Version: 2, error: "reglement_refuse", message: "refused" })));
+    close = t.close;
+    const r = await t.client.callTool(SEARCH);
+    expect(resultOf(r).error).toBe("reglement_incertain");
+    expect(t.local.spent).toBe(2000n);
+  });
+
   it("the transaction of an undetermined settlement is passed on", async () => {
     const tx = `0x${"cd".repeat(32)}`;
     const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, api("search_french_companies", () => uncertainCases[0]![1]));
@@ -192,7 +200,90 @@ describe("M1: after a signature, an outcome that may have paid counts against th
   });
 });
 
+describe("only USDC on Base is signed", () => {
+  const withOptions = (accepts: unknown[]): ApiReply => {
+    const q = recordedQuote("search_french_companies");
+    return { status: 402, json: { error: "payment_required" }, headers: { "payment-required": Buffer.from(JSON.stringify({ ...q, accepts })).toString("base64") } };
+  };
+  const usdc = () => structuredClone(recordedQuote("search_french_companies").accepts.find((a) => a.asset.toLowerCase() === USDC.toLowerCase())!);
+
+  it.each([
+    ["another chain (Base Sepolia)", () => [{ ...usdc(), network: "eip155:84532" }]],
+    ["another token on Base", () => [{ ...usdc(), asset: "0x0000000000000000000000000000000000000001" }]],
+    ["EURC only (needs an opt-in this package does not give)", () => [{ ...usdc(), asset: "0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42" }]],
+    ["another scheme", () => [{ ...usdc(), scheme: "upto" }]],
+  ])("%s: paiement_refuse, nothing signed, nothing counted", async (_title, accepts) => {
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, { onRequest: (q) => (signedOf(q) ? dataReply() : withOptions(accepts())) });
+    close = t.close;
+    const r = await t.client.callTool(SEARCH);
+    expect(resultOf(r).error).toBe("paiement_refuse");
+    expect(resultOf(r).message).toContain("USDC on Base");
+    expect(t.api.requests.filter(signedOf)).toEqual([]);
+    expect(t.local.spent).toBe(0n);
+  });
+
+  it("a quote with a foreign option next to USDC on Base: the USDC option is signed, at its price", async () => {
+    const accepts = [{ ...usdc(), network: "eip155:84532", amount: "1" }, usdc()];
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, { onRequest: (q) => (signedOf(q) ? dataReply() : withOptions(accepts)) });
+    close = t.close;
+    expect((await t.client.callTool(SEARCH)).isError).toBe(false);
+    const payload = decodePaymentSignatureHeader(signedOf(t.api.requests[1]!)!);
+    expect(payload.accepted.network).toBe("eip155:8453");
+    expect(payload.accepted.amount).toBe("2000");
+    expect(t.local.spent).toBe(2000n);
+  });
+});
+
 describe("m4: the client's cancellation follows the call", () => {
+  /** The local server's wallet, wrapped: `before` runs at the start of each signature. */
+  function wrapSign(local: unknown, before: () => void): { signed: () => number } {
+    const wallet = (local as { wallet: { sign: (...a: unknown[]) => Promise<unknown> } }).wallet;
+    const sign = wallet.sign.bind(wallet);
+    let n = 0;
+    wallet.sign = async (...a: unknown[]) => {
+      before();
+      n++;
+      return sign(...a);
+    };
+    return { signed: () => n };
+  }
+
+  it("cancelled while the quote is being signed: appel_annule, the signature never sent, nothing held, the next call goes through", async () => {
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY, SIRENIC_MAX_PAR_SESSION: "0.002" }, api("search_french_companies", () => dataReply()));
+    close = t.close;
+    const controller = new AbortController();
+    const hook = wrapSign(t.local, () => controller.abort());
+    const r = await t.local.call(SEARCH.name, SEARCH.arguments, controller.signal);
+    expect(resultOf(r).error).toBe("appel_annule");
+    expect(hook.signed()).toBe(1);
+    expect(t.api.requests.filter(signedOf)).toEqual([]);
+    expect(t.local.spent).toBe(0n);
+    expect((t.local as unknown as { wallet: { reserved: bigint } }).wallet.reserved).toBe(0n);
+    // nothing was held: the session cap of $0.002 still has room for one payment
+    expect((await t.client.callTool(SEARCH)).isError).toBe(false);
+    expect(t.local.spent).toBe(2000n);
+  });
+
+  it("cancelled once the quote is back, before the signature: the wallet never signs", async () => {
+    const controller = new AbortController();
+    const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, api("search_french_companies", () => dataReply()));
+    close = t.close;
+    const hook = wrapSign(t.local, () => undefined);
+    // the quote is delivered and checked against the caps; the client leaves right then, before the package signs
+    const wallet = (t.local as unknown as { wallet: { decide: (...a: unknown[]) => unknown } }).wallet;
+    const decide = wallet.decide.bind(wallet);
+    wallet.decide = (...a: unknown[]) => {
+      const decision = decide(...a);
+      controller.abort();
+      return decision;
+    };
+    const r = await t.local.call(SEARCH.name, SEARCH.arguments, controller.signal);
+    expect(resultOf(r).error).toBe("appel_annule");
+    expect(t.api.requests.filter(signedOf)).toEqual([]);
+    expect(hook.signed()).toBe(0);
+    expect(t.local.spent).toBe(0n);
+  });
+
   it("cancelled while the first request is in flight: appel_annule, nothing reserved, nothing signed", async () => {
     const controller = new AbortController();
     const t = await localServer({ SIRENIC_WALLET_KEY: KEY }, {

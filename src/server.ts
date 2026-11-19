@@ -76,15 +76,19 @@ function withReceipt(result: CallToolResult, answer: ApiAnswer): CallToolResult 
   return receipt === undefined ? result : { ...result, _meta: { ...(result._meta ?? {}), "x402/payment-response": receipt } };
 }
 
-/** The settlement block of a 402 the API served after a signed payment (`reglement_refuse`, `reglement_indetermine`). */
+/**
+ * The settlement outcome of a 402 the API served after a signed payment (`reglement_refuse`, `reglement_indetermine`),
+ * read as the hosted server reads it: a refusal counts as one only when its body is consistent (`settlement.outcome`
+ * "refuse" and a list of attempts); a body that names a settlement code but is otherwise inconsistent is undetermined.
+ */
 function settlementOf(answer: ApiAnswer): { outcome: "refuse" | "indetermine"; transaction?: string } | undefined {
   const body = jsonOf(answer);
   if (!body.ok || body.value === null || typeof body.value !== "object") return undefined;
-  const { error, settlement } = body.value as { error?: unknown; settlement?: { transaction?: unknown } };
-  const outcome = error === "reglement_indetermine" ? "indetermine" : error === "reglement_refuse" ? "refuse" : undefined;
-  if (!outcome) return undefined;
+  const { error, settlement } = body.value as { error?: unknown; settlement?: { outcome?: unknown; transaction?: unknown; attempts?: unknown } };
+  if (error !== "reglement_indetermine" && error !== "reglement_refuse") return undefined;
   const transaction = typeof settlement?.transaction === "string" ? settlement.transaction : undefined;
-  return { outcome, ...(transaction ? { transaction } : {}) };
+  const refused = error === "reglement_refuse" && settlement?.outcome === "refuse" && Array.isArray(settlement.attempts);
+  return { outcome: refused ? "refuse" : "indetermine", ...(transaction ? { transaction } : {}) };
 }
 
 function uncertain(price: bigint, why: string, details: Record<string, unknown> = {}): CallToolResult {
@@ -180,6 +184,9 @@ export class SirenicServer {
     if (!quote) return withReceipt(renderAnswer(first.answer, entry.template.rendu, name), first.answer);
     if (!this.wallet) return paymentRequired(first.answer, quote, config);
 
+    if (quotePrice(quote) === undefined) {
+      return packageError("paiement_refuse", "The quote offers no payment this package signs (the exact scheme in USDC on Base): nothing was signed.");
+    }
     // The price is reserved against the session cap inside decide(), before the first await below: calls sent together
     // never pass the same check. The reservation becomes spending on a result or on an uncertain settlement, and is given
     // back on every other outcome (the finally below covers any path that did not settle it).
@@ -242,7 +249,7 @@ export class SirenicServer {
       const settlement = settlementOf(answer);
       if (settlement?.outcome === "indetermine") {
         reservation.settle();
-        return uncertain(price, "The Sirenic API could not confirm the settlement of the signed payment (reglement_indetermine).", {
+        return uncertain(price, "The Sirenic API could not confirm the settlement of the signed payment.", {
           statut_http: 402,
           ...(settlement.transaction ? { transaction: settlement.transaction } : {}),
         });

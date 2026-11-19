@@ -1,11 +1,15 @@
 /**
  * The arguments of a tool call, read through the tool's input schema before the call template turns them into a request,
- * with the semantics of the hosted Sirenic server (its tools are zod 3 schemas, parsed by the MCP SDK):
+ * with the semantics of the hosted Sirenic server (its tools are zod 4 schemas, parsed by the MCP SDK):
  *   - a key the schema does not declare is dropped (the payment arguments `x_payment` and `api_key` among them);
  *   - the keys of an object come out in the order of the schema's `properties`, the order the query string is written in
  *     (the quote is signed over the request, so its bytes matter);
- *   - a missing optional property with a `default` takes it;
+ *   - a missing optional property with a `default` takes it; a URL comes out as zod 4 gives it (blanks at both ends and
+ *     tabs and line breaks removed); of two union options, the first that accepts the value gives the output;
  *   - a value of the wrong type, out of its bounds or outside its enum is refused, naming the argument, never its value.
+ * One deliberate difference: a served `pattern` has lost the flags of the zod regex (the hosted server matches some
+ * identifiers case-insensitively, and JSON Schema cannot say so), so a value that matches only case-insensitively is let
+ * through and the API judges it (an invalid value is answered 400 and never charged).
  *
  * Seventeen JSON Schema keywords are known (KNOWN_KEYWORDS, a closed list: the ones the served schemas use, measured on
  * the snapshot). A schema with any other keyword is not interpreted: its tool is not served (catalogue.ts names it at
@@ -128,13 +132,17 @@ function label(path: string): string {
 function readString(schema: Schema, value: string, path: string): Reading {
   if (isBound(schema.minLength) && value.length < (schema.minLength as number)) return fail(`${label(path)}: shorter than ${String(schema.minLength)} characters`);
   if (isBound(schema.maxLength) && value.length > (schema.maxLength as number)) return fail(`${label(path)}: longer than ${String(schema.maxLength)} characters`);
-  if (typeof schema.pattern === "string" && !new RegExp(schema.pattern).test(value)) return fail(`${label(path)}: does not match the expected pattern`);
+  if (typeof schema.pattern === "string" && !new RegExp(schema.pattern).test(value) && !new RegExp(schema.pattern, "i").test(value)) {
+    return fail(`${label(path)}: does not match the expected pattern`);
+  }
   if (schema.format === "uri") {
+    const url = value.trim().replace(/[\t\n\r]/g, "");
     try {
-      new URL(value);
+      new URL(url);
     } catch {
       return fail(`${label(path)}: not a URL`);
     }
+    return { ok: true, value: url };
   }
   return { ok: true, value };
 }

@@ -148,10 +148,14 @@ export interface RemoteList {
 
 /**
  * The catalogue brought up to date from the hosted tools/list (never a source of calls), and the lines that say what
- * changed. A server that does not publish call templates (older than this package) only refreshes descriptions.
+ * changed. A server that publishes call templates withdraws a tool whose template or schema (descriptions and dialect
+ * aside) is not the snapshot's, or that has lost its template; a server that publishes none (older than this package)
+ * only refreshes descriptions.
  */
 export function refreshCatalogue(catalogue: Catalogue, remote: RemoteList): { catalogue: Catalogue; notes: string[] } {
   const remoteByName = new Map(remote.tools.map((t) => [t.name, t]));
+  // A server that publishes call templates publishes one per tool: a tool without one there is not callable as before.
+  const publishesTemplates = remote.tools.some((t) => callTemplateOf(t) !== undefined);
   const byName = new Map<string, ServedTool>();
   const tools: Tool[] = [];
   const withdrawn: string[] = [];
@@ -166,8 +170,10 @@ export function refreshCatalogue(catalogue: Catalogue, remote: RemoteList): { ca
     const local = toLocalTool(there);
     const remoteTemplate = callTemplateOf(local);
     if (
-      remoteTemplate !== undefined &&
-      (canonicalJson(remoteTemplate) !== canonicalJson(entry.template) || canonicalJson(schemaShape(local.inputSchema)) !== canonicalJson(schemaShape(entry.schema)))
+      publishesTemplates &&
+      (remoteTemplate === undefined ||
+        canonicalJson(remoteTemplate) !== canonicalJson(entry.template) ||
+        canonicalJson(schemaShape(local.inputSchema)) !== canonicalJson(schemaShape(entry.schema)))
     ) {
       changed.push(served.name);
       continue;

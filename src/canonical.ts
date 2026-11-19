@@ -27,15 +27,16 @@ export function canonicalJson(value: unknown): string {
 }
 
 /**
- * An input schema without its `description` texts (a property named `description` stays): what the arguments are read
- * through. A parameter description that changes on the server does not change how a call is made.
+ * An input schema without its `description` texts (a property named `description` stays) and without its `$schema`
+ * dialect: what the arguments are read through. A parameter description, or the dialect the server's SDK writes, that
+ * changes on the server does not change how a call is made.
  */
 export function schemaShape(schema: unknown): unknown {
   if (Array.isArray(schema)) return schema.map(schemaShape);
   if (schema === null || typeof schema !== "object") return schema;
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(schema as Record<string, unknown>)) {
-    if (key === "description") continue;
+    if (key === "description" || key === "$schema") continue;
     if (key === "properties" && value !== null && typeof value === "object" && !Array.isArray(value)) {
       out[key] = Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([name, property]) => [name, schemaShape(property)]));
     } else if (key === "items" || key === "anyOf") {

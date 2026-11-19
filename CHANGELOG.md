@@ -20,8 +20,17 @@ every call to the hosted MCP server.
   still go to the API.
 - After a signed payment, an outcome that may have paid (a settlement the API could not confirm, an answer that is not
   the API's, a broken connection, a call cancelled while the payment travels) counts against the session cap as
-  `reglement_incertain`; a refused settlement, a new quote or an error of the API give the reservation back. A call
-  cancelled before the signed request is sent pays nothing (`appel_annule`).
+  `reglement_incertain`, and so does a new quote that says the signed authorization was already used on chain; a
+  refused settlement, another new quote or an error of the API give the reservation back. A call cancelled before the
+  signed request is sent pays nothing (`appel_annule`).
+- The wallet signs only the `exact` scheme in USDC on Base; a quote without such an option is refused, nothing signed
+  (0.1.0 signed any EVM option the x402 client accepted).
+- JSON rendered as text is compact beyond 20,000 characters (a large batch stays under what clients accept).
+- A value that fits a served pattern only in another case is sent and the API judges it: the served schema has lost
+  the case-insensitive flag of some identifiers (Swiss, Romanian, Portuguese, Polish, Irish, Cypriot, French
+  departments).
+- Dependencies aligned with the hosted server: `@modelcontextprotocol/sdk` 1.32.2, `zod` 4.6.7, `@x402/core` and
+  `@x402/evm` 2.29.0; transitive fixes within their ranges. `npm audit`: no vulnerability (9 with 0.1.0's lock file).
 - Errors of the package, a closed list: `argument_invalide`, `gabarit_invalide`, `plafond_depasse`, `paiement_refuse`,
   `reglement_incertain`, `appel_annule`, `service_injoignable`. `cle_invalide`, `compte_inactif` and
   `trop_de_requetes` are gone: the API's own 401, 403 and 429 reach the client as served.

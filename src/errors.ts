@@ -16,7 +16,9 @@ export const ERROR_CODES = [
   "gabarit_invalide",
   /** The quote is above the cap per call or what is left of the session cap: nothing is signed. */
   "plafond_depasse",
-  /** The signed payment was refused (a new quote, or a settlement refused): nothing was settled, nothing is replayed. */
+  /** No payment was made: the quote offers nothing this package signs (USDC on Base), the wallet could not sign
+   *  it, or the signed payment was refused (a new quote, a settlement refused). Nothing was settled, nothing is
+   *  replayed. */
   "paiement_refuse",
   /** A signed payment was sent and its outcome is unknown (connection broken, cancelled, an answer that is not the API's,
    *  a settlement the API could not confirm): it may have been settled, it counts against the session cap, nothing is

@@ -152,6 +152,15 @@ describe("Q1 A and m3: the hosted list brings the list up to date, never the cal
     expect(refreshCatalogue(base, { tools: keysMoved }).catalogue.byName.has(withQuery.name)).toBe(true);
   });
 
+  it("m3: a server that publishes templates and has lost one tool's template withdraws that tool; a new schema dialect alone withdraws nothing", () => {
+    const base = catalogueFromSnapshot(SNAPSHOT);
+    const remote = SNAPSHOT.tools.map(clone).map((t) => ({ ...t, inputSchema: { ...t.inputSchema, $schema: "https://json-schema.org/draft/2020-12/schema" } }));
+    delete (remote.find((t) => t.name === "get_french_company_profile")!._meta as Record<string, unknown>)["eu.sirenic/appel"];
+    const { catalogue } = refreshCatalogue(base, { tools: remote });
+    expect(catalogue.byName.has("get_french_company_profile")).toBe(false);
+    expect(catalogue.tools.length).toBe(base.tools.length - 1);
+  });
+
   it("a server older than this package (no call templates): tolerated, its descriptions refresh what both serve", () => {
     const base = catalogueFromSnapshot(SNAPSHOT);
     const { catalogue } = refreshCatalogue(base, { tools: REMOTE.tools });

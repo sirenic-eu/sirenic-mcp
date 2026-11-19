@@ -3,13 +3,13 @@
  * 18/10/2026, r2 of the review of lot 1): unknown keys dropped, object keys in the schema's order, defaults applied,
  * wrong values refused. The oracle is the hosted server's own stack: an McpServer of the same SDK with zod schemas,
  * whose tools/list gives the JSON Schema this package reads, and whose handler receives the arguments zod parsed. The
- * hosted server is on zod 4 (4.6.7 on 19/11/2026): the oracle uses zod/v4.
+ * package's dependencies are the hosted server's (@modelcontextprotocol/sdk 1.32.2, zod 4.6.7 on 19/11/2026).
  */
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { describe, expect, it } from "vitest";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { KNOWN_KEYWORDS, readArguments, schemaDefect } from "../src/arguments.js";
 import { toLocalTool } from "../src/catalogue.js";
 import { SNAPSHOT } from "./helpers/fixtures.js";
@@ -42,6 +42,10 @@ const SHAPES = {
   union: {
     forme: z.union([z.object({ a: z.string() }), z.object({ a: z.string(), b: z.string() })]),
   },
+  // a case-insensitive identifier, as the hosted Romanian, Swiss or Irish tools write theirs: the served pattern loses /i
+  casse: {
+    cui: z.string().regex(/^RO\d{2,10}$/i),
+  },
 } as const;
 
 type ShapeName = keyof typeof SHAPES;
@@ -57,6 +61,7 @@ async function oracle(): Promise<{ schemas: Record<ShapeName, unknown>; parse(na
   server.registerTool("liste", { inputSchema: SHAPES.liste }, handler);
   server.registerTool("criteres", { inputSchema: SHAPES.criteres }, handler);
   server.registerTool("union", { inputSchema: SHAPES.union }, handler);
+  server.registerTool("casse", { inputSchema: SHAPES.casse }, handler);
   const [a, b] = InMemoryTransport.createLinkedPair();
   await server.connect(b);
   const client = new Client({ name: "oracle-client", version: "0.0.0" });
@@ -98,6 +103,11 @@ const CASES: Array<[ShapeName, unknown]> = [
   ["criteres", { criteres: [{ champ: "naf", valeur: true }], extra: [1, 2] }],
   ["union", { forme: { a: "x", b: "y" } }],
   ["union", { forme: { b: "y" } }],
+  ["criteres", { criteres: [], webhook: "  https://example.org/hook  " }],
+  ["criteres", { criteres: [], webhook: "https://exa\tmple.org/ho\nok" }],
+  ["casse", { cui: "RO123456" }],
+  ["casse", { cui: "ro123456" }],
+  ["casse", { cui: "XX123456" }],
 ];
 
 describe("Q4 A: the arguments read with the hosted server's semantics", () => {
@@ -137,6 +147,12 @@ describe("Q4 A: the arguments read with the hosted server's semantics", () => {
     expect(!r.ok && r.reason).not.toContain("secret-looking-value-123");
     const missing = readArguments(schema, {});
     expect(!missing.ok && missing.reason).toBe("siren: required");
+  });
+
+  it("the one deliberate difference: a value that fits a pattern only in another case is let through (the API judges it)", () => {
+    const schema = { type: "object", properties: { pays: { type: "string", pattern: "^[A-Z]{2}$" } }, required: ["pays"] };
+    expect(readArguments(schema, { pays: "fr" })).toEqual({ ok: true, value: { pays: "fr" } });
+    expect(readArguments(schema, { pays: "FRA" }).ok).toBe(false);
   });
 
   it("every schema of the shipped snapshot is made of known keywords only", () => {

@@ -6,7 +6,7 @@
  */
 import { afterEach, describe, expect, it } from "vitest";
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { ERROR_TEXT_LIMIT, SirenicApi } from "../src/rest.js";
+import { COMPACT_TEXT_ABOVE, ERROR_TEXT_LIMIT, SirenicApi } from "../src/rest.js";
 import { fakeApi } from "./helpers/fake-api.js";
 import { USER_AGENT } from "../src/version.js";
 import { DEVIS, SNAPSHOT, dataReply, errorReply, paymentResponseHeader } from "./helpers/fixtures.js";
@@ -85,6 +85,20 @@ describe("C: each tool calls the REST API by its call template", () => {
       expect(resultOf(r)).toEqual({ statut_http: status, ...json });
       expect((r.structuredContent as { payment_required: boolean }).payment_required).toBe(false);
     }
+  });
+
+  it("r1: JSON text is indented, and compact once it would exceed the threshold (the structure is unchanged)", async () => {
+    const small = { lignes: [{ siren: "552032534" }] };
+    const large = { lignes: Array.from({ length: 400 }, (_, i) => ({ rang: i, siren: "552032534", denomination: "DANONE", etat: "actif" })) };
+    expect(JSON.stringify(large, null, 2).length).toBeGreaterThan(COMPACT_TEXT_ABOVE);
+    const answers = [dataReply(small), dataReply(large)];
+    const t = await localServer({}, { onRequest: (_q, n) => answers[n - 1]! });
+    close = t.close;
+    const r1 = await t.client.callTool({ name: "get_french_company_profile", arguments: { siren: "552032534" } });
+    expect(textOf(r1)).toBe(JSON.stringify(small, null, 2));
+    const r2 = await t.client.callTool({ name: "get_french_company_profile", arguments: { siren: "552032534" } });
+    expect(textOf(r2)).toBe(JSON.stringify(large));
+    expect(resultOf(r2)).toEqual(large);
   });
 
   it("m1: an error answer that is not JSON is cut beyond the limit, and the cut is said; a 2xx is never cut", async () => {

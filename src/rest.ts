@@ -20,6 +20,17 @@ import { isQuote } from "./wallet.js";
 export const CALL_TIMEOUT_MS = 300_000;
 /** The text of an error answer that is not JSON is cut beyond this many characters (the cut is said); a 2xx never is. */
 export const ERROR_TEXT_LIMIT = 2_000;
+/** JSON rendered as text is indented, unless that text would exceed this many characters: then it is compact (the
+ *  structure is in structuredContent either way). A large batch stays under what MCP clients accept as a tool result;
+ *  the hosted server compacts its batch tools for the same reason (measured there: 100 lines, 59 167 characters
+ *  indented, 42 904 compact). No tool is named: the size decides. */
+export const COMPACT_TEXT_ABOVE = 20_000;
+
+/** JSON as the text of a tool result: indented, or compact beyond COMPACT_TEXT_ABOVE characters. */
+export function jsonText(value: unknown): string {
+  const indented = JSON.stringify(value, null, 2);
+  return indented.length > COMPACT_TEXT_ABOVE ? JSON.stringify(value) : indented;
+}
 
 export interface ApiOptions {
   baseUrl: URL;
@@ -172,7 +183,7 @@ export function renderAnswer(answer: ApiAnswer, rendu: RenduAppel, tool: string)
   const body = bodyOf(answer, !ok);
   const resultat = ok ? asObject(body) : { statut_http: answer.status, ...asObject(body) };
   return {
-    content: [{ type: "text", text: JSON.stringify(ok ? body : resultat, null, 2) }],
+    content: [{ type: "text", text: jsonText(ok ? body : resultat) }],
     structuredContent: { payment_required: false, resultat },
     isError: !ok,
   };
