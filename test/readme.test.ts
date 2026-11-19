@@ -1,18 +1,23 @@
-/** The README: its tools table is the one `npm run tableau` derives from the shipped snapshot; no long dash. */
+/**
+ * The README: it opens on what the package is since decision C (tool definitions in the repository, each tool calls the
+ * REST API and pays); its tools table is the one `npm run tableau` derives from the shipped snapshot; its free key
+ * figures are the API's; no long dash.
+ */
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { routePrices } from "../src/catalogue.js";
 import { ERROR_CODES } from "../src/errors.js";
 import { PACKAGE_NAME } from "../src/version.js";
 import { priceLabel, replaceToolsTable } from "../scripts/tableau-lib.js";
-import { QUOTES, SNAPSHOT } from "./helpers/fixtures.js";
+import { DEVIS, SNAPSHOT } from "./helpers/fixtures.js";
 
 const README = readFileSync(new URL("../README.md", import.meta.url), "utf8");
 
 describe("README", () => {
   it("the tools table is generated from the snapshot (else: npm run tableau)", () => {
     expect(README).toBe(replaceToolsTable(README, SNAPSHOT));
-    expect(README).toContain("112 tools (108 paid, 4 free) covering France and 19 other European countries");
+    expect(README).toContain(`${SNAPSHOT.tools.length} tools (`);
+    expect(README).toContain(`read from the Sirenic server ${SNAPSHOT.server.version} on ${SNAPSHOT.generated_at.slice(0, 10)}`);
   });
 
   it("prices come from each tool's _meta: one figure, per entity, a range, or free", () => {
@@ -40,19 +45,29 @@ describe("README", () => {
   });
 
   it("the closed list of errors in the README is the package's own (ERROR_CODES), and paiement_requis is said apart", () => {
-    const sentence = /Errors the package returns itself \(a closed list[^)]*\):([\s\S]*?)Errors of the Sirenic server/.exec(README)?.[1] ?? "";
+    const sentence = /Errors the package returns itself \(a closed list[^)]*\):([\s\S]*?)Errors of the Sirenic API/.exec(README)?.[1] ?? "";
     expect(sentence).not.toBe("");
     expect([...sentence.matchAll(/`([a-z_]+)`/g)].map((m) => m[1])).toEqual([...ERROR_CODES]);
-    expect(README).toContain("it answers `payment_required: true` in `structuredContent`, with the\nserver's `quote`");
+    expect(README).toContain("it answers `payment_required: true` in `structuredContent`, with the\nAPI's `quote`");
   });
 
-  it("the free key quota in the README is the server's, read in the recorded quote (free_tier)", () => {
-    for (const quote of [QUOTES.search_french_companies, QUOTES.get_french_company_default_risk]) {
-      const offer = (quote.structuredContent as { free_tier: { monthly_calls: number; max_price_per_call: string } }).free_tier;
-      expect(README).toContain(`A free key gives ${offer.monthly_calls} calls a month on routes at ${offer.max_price_per_call} or less;`);
+  it("the free key quota in the README is the API's, read in the recorded 402 answers (free_tier)", () => {
+    for (const answer of Object.values(DEVIS.answers)) {
+      const offer = answer.body.free_tier as { monthly_calls: number; monthly_value_eur: number };
+      expect(README).toContain(`A free key gives ${offer.monthly_calls} calls a month, up to EUR ${offer.monthly_value_eur} of value, on most routes`);
     }
-    // the only figure of the sentence: no other quota written by hand
+    // the only figures of the sentence: no other quota written by hand
     expect([...README.matchAll(/(\d+) calls a month/g)].map((m) => m[1])).toEqual(["150"]);
+  });
+
+  it("C: the README says what the package is (definitions here, a REST call that pays), never what 0.1.0 said", () => {
+    expect(README).toContain("**Its tool definitions live in this\nrepository**");
+    expect(README).toContain("**each tool calls the Sirenic REST API itself and pays for the call**");
+    expect(README).not.toContain("never calls a REST route");
+    expect(README).not.toMatch(/\b112 tools\b/);
+    // NAF 62.01Z is computer programming (note of 11/10/2026)
+    expect(README).toContain("computer programming companies (NAF 62.01Z)");
+    expect(README).not.toContain("software companies (NAF 62.01Z)");
   });
 
   it("no long dash, no secret-looking value, install in one line", () => {

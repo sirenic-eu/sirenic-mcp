@@ -10,8 +10,9 @@ register it read.
 Each call is paid on its own: with a free API key, or in USDC from a local x402 wallet, without an account.
 
 `sirenic-mcp` is a local [Model Context Protocol](https://modelcontextprotocol.io) server (stdio) for Claude
-Desktop, Cursor, Claude Code and any MCP client that starts a local server. It serves the same tools as the hosted
-Sirenic server (`https://api.sirenic.eu/mcp`) and pays for them on your behalf, within caps you set.
+Desktop, Cursor, Claude Code and any MCP client that starts a local server. **Its tool definitions live in this
+repository** (`catalogue/instantane.json`), and **each tool calls the Sirenic REST API itself and pays for the call**,
+by API key or by x402, within caps you set. It works without the hosted Sirenic MCP server.
 
 ## Install
 
@@ -36,8 +37,8 @@ Claude Code, in one line:
 claude mcp add sirenic -e SIRENIC_API_KEY=srn_live_... -- npx -y sirenic-mcp
 ```
 
-Node.js 22 or later. Then ask, for example: *"List active software companies (NAF 62.01Z) in the Rhône department
-with 10 to 49 employees, then check the first one before we contact them."*
+Node.js 22 or later. Then ask, for example: *"List active computer programming companies (NAF 62.01Z) in the Rhône
+department with 10 to 49 employees, then check the first one before we contact them."*
 
 Prefer a remote server? Clients that speak streamable HTTP can use `https://api.sirenic.eu/mcp` directly (each
 tool takes an `x_payment` argument), or the OAuth connector `https://api.sirenic.eu/mcp/connecteur`: see
@@ -47,8 +48,8 @@ tool takes an `x_payment` argument), or the OAuth connector `https://api.sirenic
 
 | Rail | Set | What happens |
 |---|---|---|
-| API key | `SIRENIC_API_KEY` | Calls go to `https://api.sirenic.eu/mcp/connecteur` with `Authorization: Bearer <key>`. A free key gives 150 calls a month on routes at $0.05 or less; beyond, prepaid credits are charged at the same prices. [Get a key](https://api.sirenic.eu/compte?utm_source=forge&utm_campaign=sirenic-mcp-npm). |
-| x402 wallet | `SIRENIC_WALLET_KEY` | No account. When a tool returns its price (an x402 quote), the local wallet signs a USDC payment on Base (an EIP-3009 authorization: no gas) and the call is sent again with it. The server settles, then answers. |
+| API key | `SIRENIC_API_KEY` | Each call goes to the REST API with the key in `X-Api-Key`. A free key gives 150 calls a month, up to EUR 2 of value, on most routes (the price list says which); beyond, prepaid credits are charged at the same prices. [Get a key](https://api.sirenic.eu/compte?utm_source=forge&utm_campaign=sirenic-mcp-npm). |
+| x402 wallet | `SIRENIC_WALLET_KEY` | No account. When the API answers a call with its price (an x402 quote, HTTP 402), the local wallet signs a USDC payment on Base (an EIP-3009 authorization: no gas) and the same request is sent again with it. The API settles, then answers. |
 
 When both are set, the API key pays and the wallet is never used. When neither is set, tools are listed and a paid
 call returns its price and how to pay, without paying.
@@ -66,36 +67,49 @@ wallet holding only what you are ready to spend.
 A quote above a cap is refused before anything is signed. The tool answers `plafond_depasse` with the quoted price,
 the cap and the variable to raise; the tool list itself is unchanged (tools above the cap stay listed). Most tools
 cost $0.05 or less. The session cap counts the calls in progress too: a price is held against it before the
-signature, so calls sent together never spend more than the cap.
+signature, so calls sent together never spend more than the cap. A payment whose outcome is unknown (the connection
+broke, the call was cancelled while the payment travelled, the API could not confirm the settlement) counts against
+the session cap and is never replayed.
 
 ## How it works
 
-- At startup the server reads the tool list of `https://api.sirenic.eu/mcp` (`tools/list`): names, descriptions,
-  schemas, and each tool's routes and prices in `_meta["eu.sirenic/prix"]` (with the maximum and the rule when the
-  price depends on a parameter: a watch's duration, a file's blocks). Nothing is written by hand in this package.
-  It removes the two payment arguments (`x_payment`, `api_key`): the model never handles a key or a signature.
-- Each call is forwarded to the Sirenic server. The paywall stays on the server: this package never calls a REST
-  route, never builds a quote and only signs a quote the server returned, under your caps.
-- A call paid in x402 and settled returns the server's settlement receipt in `_meta["x402/payment-response"]`
-  (transaction, network, payer). A payment that is not settled returns none, and this package never makes one up.
-- If the server cannot be reached at startup, the tool list comes from the snapshot shipped with the package (its
-  date is in the server instructions) and every call is refused until the server answers. Nothing is signed.
-- No file is written, no telemetry is sent. The server identifies itself as `sirenic-mcp-npm/<version>`.
+- **The tools are defined here.** `catalogue/instantane.json` is a dated snapshot of the Sirenic server's
+  `tools/list`: names, descriptions, input schemas, each tool's routes and prices (`_meta["eu.sirenic/prix"]`) and
+  its **call template** (`_meta["eu.sirenic/appel"]`: method, path, query parameters, `Accept`). It is generated by
+  `npm run instantane` from the free `tools/list` of the server, never written by hand. The two payment arguments of
+  the hosted tools (`x_payment`, `api_key`) are removed: the model never handles a key or a signature.
+- **Each call is a REST call.** The arguments are read through the tool's input schema (unknown keys dropped, defaults
+  applied, the same reading as the hosted server); the call template turns them into a `GET` under
+  `https://api.sirenic.eu/v1/` (the analyser in `src/appel-outil.ts` is the one the hosted server uses, and both play
+  the same test vectors). The paywall is the API's: this package never builds a quote, and only signs a quote the
+  API returned, under your caps. Redirects are never followed.
+- **Answers as the hosted server renders them.** JSON data in `structuredContent.resultat` and as text, a PDF in
+  base64, Markdown as is; an error of the API with its `statut_http`. A call paid in x402 and settled returns the
+  API's settlement receipt in `_meta["x402/payment-response"]` (transaction, network, payer); a payment that is not
+  settled returns none, and this package never makes one up.
+- **The list stays up to date.** At startup, when it answers, the hosted `tools/list` (`https://api.sirenic.eu/mcp`,
+  anonymous) refreshes descriptions and withdraws a tool the server no longer serves or has changed; a tool added on
+  the server is named in the startup log and comes with the next version. It is never the source of a call: without
+  it, the snapshot serves and the calls still go to the API. A daily workflow of this repository compares the
+  snapshot with the server and opens an issue on any difference (GitHub disables scheduled workflows after 60 days
+  without activity in the repository).
+- No file is written, no telemetry is sent. Every request says `User-Agent: sirenic-mcp-npm/<version>`.
 
 Without a rail, a paid tool is not an error: it answers `payment_required: true` in `structuredContent`, with the
-server's `quote`, its `free_tier` offer and a `hint` that starts with `paiement_requis` (`isError` is false).
+API's `quote`, its `free_tier` offer and a `hint` that starts with `paiement_requis` (`isError` is false).
 
 Errors the package returns itself (a closed list, in `structuredContent.resultat.error`, `isError` true):
-`plafond_depasse`, `paiement_refuse`, `reglement_incertain` (the connection broke after a signed payment was sent:
-nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `trop_de_requetes`,
-`service_injoignable`. Errors of the Sirenic server itself (`amont_indisponible`, `compte_requis`,
-`credits_insuffisants`...) reach your client unchanged.
+`argument_invalide` (the arguments do not fit the tool's schema: nothing was sent), `gabarit_invalide` (the tool's
+call template gives no request: a fault of Sirenic, nothing was sent), `plafond_depasse`, `paiement_refuse`,
+`reglement_incertain` (a signed payment may have been settled: it is counted and never replayed, check your
+balance), `appel_annule`, `service_injoignable`. Errors of the Sirenic API itself (`amont_indisponible`,
+`credits_insuffisants`, a refused key...) reach your client as served, with `statut_http`.
 
 ## Tools
 
 <!-- tools:start (generated by npm run tableau, do not edit) -->
 
-112 tools (108 paid, 4 free) covering France and 19 other European countries, read from the Sirenic server 1.2.0 on 2026-10-08. Prices are in USD per call (per entity for batch tools), the same by API key and by x402.
+119 tools (115 paid, 4 free) covering France and 19 other European countries, read from the Sirenic server 1.2.1 on 2026-11-19. Prices are in USD per call (per entity for batch tools), the same by API key and by x402.
 
 | Tool | What it does | Price |
 |---|---|---|
@@ -105,6 +119,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `detect_company_identifiers` | Detect company identifiers in text (free) | free |
 | `download_french_company_document` | Download French company document | $0.10 |
 | `find_expiring_french_public_contracts` | Expiring French public contracts | $0.05 |
+| `find_french_lookalike_companies` | Find French lookalike companies | $0.02 |
 | `get_belgian_company_filing` | Belgian annual accounts (NBB) | $0.15 |
 | `get_belgian_insider_transactions` | Belgian insider transactions | $0.02 |
 | `get_company_licences` | French regulatory authorisations | $0.02 |
@@ -113,7 +128,8 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `get_croatian_company_events` | Croatian company court-register entries | $0.02 |
 | `get_croatian_company_insolvency` | Croatian company insolvency (Sudski registar) | $0.02 |
 | `get_cypriot_company_officers` | Cypriot company officers (DRCOR) | $0.01 |
-| `get_czech_company_insolvency` | Czech company insolvency (ISIR) | $0.02 |
+| `get_czech_company_officers` | Czech company officers (public register, ISVR) | $0.01 |
+| `get_czech_company_shareholders` | Czech company shareholders (public register, ISVR) | $0.02 |
 | `get_danish_company_filing` | Danish annual accounts | $0.05 |
 | `get_danish_company_officers` | Danish company officers (CVR) | $0.01 |
 | `get_estonian_company_accounts` | Estonian annual accounts | $0.02 |
@@ -127,10 +143,12 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `get_finnish_company_filing` | Finnish annual accounts (PRH) | $0.15 |
 | `get_french_association_notices` | French association JOAFE notices | $0.01 |
 | `get_french_association_profile` | French association profile (RNA) | $0.005 |
+| `get_french_company_briefing` | French company briefing for an AI | $0.05 |
 | `get_french_company_capital` | French company share capital | $0.35 |
 | `get_french_company_changes` | French company changes (BODACC) | $0.01 |
 | `get_french_company_collective_agreements` | French company collective agreements | $0.02 |
 | `get_french_company_court_decisions` | French company court decisions | $0.01 |
+| `get_french_company_credit_limit` | French company credit limit for a new customer | $0.12 |
 | `get_french_company_default_risk` | French company default risk score | $0.10 |
 | `get_french_company_default_risk_batch` | French default risk score, batch (2 to 100) | $0.07 per entity |
 | `get_french_company_eu_funding` | EU research funding received (CORDIS) | $0.02 |
@@ -138,7 +156,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `get_french_company_financials` | French company financials | $0.01 |
 | `get_french_company_health_summary` | French company health summary | $0.15 |
 | `get_french_company_hiring_signals` | French hiring signals | $0.02 |
-| `get_french_company_identity_batch` | French identity batch: SIREN, SIRET, VAT | $0.003 per entity |
+| `get_french_company_identity_batch` | French identity batch: SIREN, SIRET, VAT | from $0.003 up to $0.01 per entity |
 | `get_french_company_industrial_risk` | French industrial risk (ICPE) | $0.01 |
 | `get_french_company_intellectual_property` | French company IP portfolio | $0.03 |
 | `get_french_company_intelligence` | French company intelligence report | $1.00 |
@@ -149,6 +167,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `get_french_company_pdf_report` | French company PDF report | $0.50 |
 | `get_french_company_profile` | French company profile (SIREN) | $0.005 |
 | `get_french_company_public_procurement` | French public contracts won | $0.01 |
+| `get_french_company_trajectory` | French company growth trajectory | $0.02 |
 | `get_french_company_updates_since` | French company: everything new since a date | $0.05 |
 | `get_french_public_buyer_profile` | French public buyer profile | $0.02 |
 | `get_french_sector_benchmarks` | French sector benchmarks (NAF) | $0.05 |
@@ -166,6 +185,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `get_norwegian_company_legal_events` | Norwegian legal events | $0.02 |
 | `get_norwegian_company_local_units` | Norwegian company local units (establishments) | $0.01 |
 | `get_norwegian_company_officers` | Norwegian company officers and board | $0.01 |
+| `get_polish_company_insolvency` | Polish company insolvency (KRS extract) | $0.02 |
 | `get_polish_company_public_procurement` | Polish company public procurement (BZP) | $0.02 |
 | `get_polish_company_registry_events` | Polish registry events (KRS) | $0.02 |
 | `get_portuguese_company_public_procurement` | Portuguese company public procurement (Portal BASE) | $0.02 |
@@ -191,6 +211,7 @@ nothing is replayed, check your balance), `cle_invalide`, `compte_inactif`, `tro
 | `list_finnish_company_filings` | Finnish filings list (PRH) | $0.01 |
 | `list_french_company_documents` | List French company documents (INPI) | $0.02 |
 | `list_french_company_establishments` | French company establishments (SIRET) | $0.003 |
+| `list_polish_company_filings` | Polish company annual-accounts filings (KRS) | $0.01 |
 | `list_slovak_company_filings` | Slovak filings list (RUZ) | $0.01 |
 | `list_uk_company_accounts` | UK accounts list (Companies House) | $0.01 |
 | `prepare_european_invoice_file` | Prepare Belgian or Polish invoice file | $0.03 |
