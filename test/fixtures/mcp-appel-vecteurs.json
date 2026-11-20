@@ -1,0 +1,254 @@
+{
+  "_lisez_moi": "Vecteurs de l'analyseur du gabarit d'appel des outils MCP (src/mcp/appel-outil.ts ; #501, décision C de CDU, lettre Q7 A du chef du 17/10/2026). Joués par tests/mcp-appel-outil.test.ts côté privé et, recopiés tels quels, par le paquet public sirenic-mcp (lot 2) : un écart entre les deux analyseurs rougit des deux côtés. Chaque requête attendue part d'un gabarit tel que le relevé du 17/10/2026 l'a produit (src/mcp/routes-outils.ts, prospection comprise avec ses onze paramètres) ; un refus gabarit_invalide joue un gabarit faux, ou un gabarit relevé avec un argument de chemin absent ou une valeur qui ne se plie pas à son encodage ; un refus argument_invalide joue un gabarit relevé avec un argument de chemin vide, « . », « .. » ou ni texte ni nombre (m1 et m3 de la relecture du 18/10/2026). Les comparaisons à faux diffèrent chacune par un seul point : forme (segments, noms, ordre, Accept) ou valeur (un segment, une valeur de requête, la méthode ; M2 de la relecture). Aucune personne, aucun secret.",
+  "version": 1,
+  "requetes": [
+    {
+      "titre": "rendu json, argument de chemin seul ; les arguments de paiement sont ignorés",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{siren}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "siren": "552032534", "api_key": "srn_live_cle-du-vecteur", "x_payment": "paiement-du-vecteur" },
+      "attendu": { "methode": "GET", "chemin": "/v1/entreprise/552032534", "accept": "application/json" }
+    },
+    {
+      "titre": "texte, un facultatif absent n'est pas envoyé",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/recherche", "requete": { "q": "texte", "pays": "texte" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "q": "Hermes" },
+      "attendu": { "methode": "GET", "chemin": "/v1/eu/recherche?q=Hermes", "accept": "application/json" }
+    },
+    {
+      "titre": "texte, espaces, accents et caractères réservés écrits comme URLSearchParams les écrit",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/recherche", "requete": { "q": "texte", "pays": "texte" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "q": "Société Générale & Cie", "pays": "FR" },
+      "attendu": { "methode": "GET", "chemin": "/v1/eu/recherche?q=Soci%C3%A9t%C3%A9+G%C3%A9n%C3%A9rale+%26+Cie&pays=FR", "accept": "application/json" }
+    },
+    {
+      "titre": "virgules",
+      "gabarit": { "methode": "GET", "chemin": "/v1/comparer", "requete": { "sirens": "virgules" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "sirens": ["552032534", "542051180"] },
+      "attendu": { "methode": "GET", "chemin": "/v1/comparer?sirens=552032534%2C542051180", "accept": "application/json" }
+    },
+    {
+      "titre": "point-virgule, puis texte",
+      "gabarit": { "methode": "GET", "chemin": "/v1/identite/lot", "requete": { "lignes": "point-virgule", "depuis": "texte" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "lignes": ["552032534", "HERMES INTERNATIONAL|75008"], "depuis": "2026-10-01" },
+      "attendu": { "methode": "GET", "chemin": "/v1/identite/lot?lignes=552032534%3BHERMES+INTERNATIONAL%7C75008&depuis=2026-10-01", "accept": "application/json" }
+    },
+    {
+      "titre": "json, le mode choisit la route (lister), un nombre en texte, une liste en virgules",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprises/requete/{mode}", "requete": { "criteres": "json", "tri": "texte", "page": "texte", "champs": "virgules" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "mode": "lister", "criteres": [{ "champ": "identite.departement", "op": "eq", "valeur": "75" }], "page": 2, "champs": ["identite.siren", "identite.denomination"] },
+      "attendu": { "methode": "GET", "chemin": "/v1/entreprises/requete/lister?criteres=%5B%7B%22champ%22%3A%22identite.departement%22%2C%22op%22%3A%22eq%22%2C%22valeur%22%3A%2275%22%7D%5D&page=2&champs=identite.siren%2Cidentite.denomination", "accept": "application/json" }
+    },
+    {
+      "titre": "le mode choisit la route (compter), les facultatifs absents",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprises/requete/{mode}", "requete": { "criteres": "json", "tri": "texte", "page": "texte", "champs": "virgules" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "mode": "compter" },
+      "attendu": { "methode": "GET", "chemin": "/v1/entreprises/requete/compter", "accept": "application/json" }
+    },
+    {
+      "titre": "si-vrai, booléen vrai : envoyé",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/GB/{company_number}/beneficiaires-effectifs", "requete": { "inclure_cesses": "si-vrai" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "company_number": "00102498", "inclure_cesses": true },
+      "attendu": { "methode": "GET", "chemin": "/v1/eu/entreprise/GB/00102498/beneficiaires-effectifs?inclure_cesses=true", "accept": "application/json" }
+    },
+    {
+      "titre": "si-vrai, booléen faux : tu",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/GB/{company_number}/beneficiaires-effectifs", "requete": { "inclure_cesses": "si-vrai" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "company_number": "00102498", "inclure_cesses": false },
+      "attendu": { "methode": "GET", "chemin": "/v1/eu/entreprise/GB/00102498/beneficiaires-effectifs", "accept": "application/json" }
+    },
+    {
+      "titre": "si-non-vide, texte vide : tu",
+      "gabarit": { "methode": "GET", "chemin": "/v1/surveillance/creer", "requete": { "cibles": "texte", "duree": "texte", "webhook": "texte", "email": "si-non-vide" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "cibles": "552032534", "duree": "30", "email": "" },
+      "attendu": { "methode": "GET", "chemin": "/v1/surveillance/creer?cibles=552032534&duree=30", "accept": "application/json" }
+    },
+    {
+      "titre": "si-non-vide, texte rempli : envoyé",
+      "gabarit": { "methode": "GET", "chemin": "/v1/surveillance/creer", "requete": { "cibles": "texte", "duree": "texte", "webhook": "texte", "email": "si-non-vide" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "cibles": "552032534", "duree": "30", "email": "veille@example.com" },
+      "attendu": { "methode": "GET", "chemin": "/v1/surveillance/creer?cibles=552032534&duree=30&email=veille%40example.com", "accept": "application/json" }
+    },
+    {
+      "titre": "texte : un zéro, un booléen faux et un texte vide sont envoyés",
+      "gabarit": { "methode": "GET", "chemin": "/v1/prospection", "requete": { "naf": "texte", "departement": "texte", "code_postal": "texte", "forme_juridique": "texte", "effectif_min": "texte", "effectif_max": "texte", "age_min": "texte", "age_max": "texte", "rge": "texte", "egapro_min": "texte", "page": "texte" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "naf": "62.01Z", "departement": "", "effectif_min": 0, "rge": false, "page": 3 },
+      "attendu": { "methode": "GET", "chemin": "/v1/prospection?naf=62.01Z&departement=&effectif_min=0&rge=false&page=3", "accept": "application/json" }
+    },
+    {
+      "titre": "rendu pdf",
+      "gabarit": { "methode": "GET", "chemin": "/v1/documents/{type}/{document_id}", "accept": "application/pdf", "rendu": "pdf" },
+      "arguments": { "type": "actes", "document_id": "A1B2C3" },
+      "attendu": { "methode": "GET", "chemin": "/v1/documents/actes/A1B2C3", "accept": "application/pdf" }
+    },
+    {
+      "titre": "rendu json-ou-pdf",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/BE/{id}/comptes/{reference}", "accept": "application/json, application/pdf", "rendu": "json-ou-pdf" },
+      "arguments": { "id": "0403170701", "reference": "2024-00123" },
+      "attendu": { "methode": "GET", "chemin": "/v1/eu/entreprise/BE/0403170701/comptes/2024-00123", "accept": "application/json, application/pdf" }
+    },
+    {
+      "titre": "rendu markdown",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{siren}/briefing", "requete": { "langue": "texte" }, "accept": "text/markdown", "rendu": "markdown" },
+      "arguments": { "siren": "552032534", "langue": "en" },
+      "attendu": { "methode": "GET", "chemin": "/v1/entreprise/552032534/briefing?langue=en", "accept": "text/markdown" }
+    },
+    {
+      "titre": "argument de chemin avec espaces, envoyé tel quel (la route les retire)",
+      "gabarit": { "methode": "GET", "chemin": "/v1/iban/verifier/{iban}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "iban": "FR76 3000 6000 0112 3456 7890 189" },
+      "attendu": { "methode": "GET", "chemin": "/v1/iban/verifier/FR76%203000%206000%200112%203456%207890%20189", "accept": "application/json" }
+    },
+    {
+      "titre": "argument de chemin avec barre oblique : encodé dans son segment",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{siren}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "siren": "55/20" },
+      "attendu": { "methode": "GET", "chemin": "/v1/entreprise/55%2F20", "accept": "application/json" }
+    },
+    {
+      "titre": "refus : argument de chemin absent",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{siren}", "accept": "application/json", "rendu": "json" },
+      "arguments": {},
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus d'argument : argument de chemin « .. » (il déplacerait l'appel sur une autre route)",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/{pays}/{id}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "pays": "..", "id": "0403170701" },
+      "attendu": { "refus": "argument_invalide" }
+    },
+    {
+      "titre": "refus d'argument : argument de chemin « . » (il déplacerait l'appel sur une autre route)",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/{pays}/{id}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "pays": "BE", "id": "." },
+      "attendu": { "refus": "argument_invalide" }
+    },
+    {
+      "titre": "refus d'argument : argument de chemin vide (un segment vide déplacerait l'appel)",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/{pays}/{id}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "pays": "BE", "id": "" },
+      "attendu": { "refus": "argument_invalide" }
+    },
+    {
+      "titre": "refus d'argument : un booléen en argument de chemin (ni texte ni nombre)",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{siren}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "siren": true },
+      "attendu": { "refus": "argument_invalide" }
+    },
+    {
+      "titre": "refus : un argument de chemin absent l'emporte sur un argument de chemin invalide (la faute du gabarit d'abord)",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/{pays}/{id}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "pays": "." },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : segment inconnu (accolades hors de la forme)",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{Siren}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "Siren": "552032534" },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : encodage hors de la liste fermée",
+      "gabarit": { "methode": "GET", "chemin": "/v1/recherche", "requete": { "q": "brut" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "q": "Hermes" },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : Accept et rendu discordants",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{siren}", "accept": "application/pdf", "rendu": "json" },
+      "arguments": { "siren": "552032534" },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : méthode autre que GET",
+      "gabarit": { "methode": "POST", "chemin": "/v1/entreprise/{siren}", "accept": "application/json", "rendu": "json" },
+      "arguments": { "siren": "552032534" },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : champ hors de la forme fermée",
+      "gabarit": { "methode": "GET", "chemin": "/v1/entreprise/{siren}", "accept": "application/json", "rendu": "json", "corps": "json" },
+      "arguments": { "siren": "552032534" },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : une liste encodée texte",
+      "gabarit": { "methode": "GET", "chemin": "/v1/recherche", "requete": { "q": "texte" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "q": ["a", "b"] },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : si-vrai d'une valeur qui n'est pas un booléen",
+      "gabarit": { "methode": "GET", "chemin": "/v1/eu/entreprise/GB/{company_number}/beneficiaires-effectifs", "requete": { "inclure_cesses": "si-vrai" }, "accept": "application/json", "rendu": "json" },
+      "arguments": { "company_number": "00102498", "inclure_cesses": "oui" },
+      "attendu": { "refus": "gabarit_invalide" }
+    },
+    {
+      "titre": "refus : gabarit absent",
+      "gabarit": null,
+      "arguments": { "siren": "552032534" },
+      "attendu": { "refus": "gabarit_invalide" }
+    }
+  ],
+  "comparaisons": [
+    {
+      "titre": "une espace écrite %20 ou + dans la requête : la même requête",
+      "a": { "methode": "GET", "chemin": "/v1/recherche?q=Hermes%20International", "accept": "application/json" },
+      "b": { "methode": "GET", "chemin": "/v1/recherche?q=Hermes+International", "accept": "application/json" },
+      "meme": true
+    },
+    {
+      "titre": "un caractère non réservé échappé au chemin : la même requête",
+      "a": { "methode": "GET", "chemin": "/v1/entreprise/%35%35%32032534", "accept": "application/json" },
+      "b": { "methode": "get", "chemin": "/v1/entreprise/552032534", "accept": "application/json" },
+      "meme": true
+    },
+    {
+      "titre": "une barre oblique échappée reste dans son segment",
+      "a": { "methode": "GET", "chemin": "/v1/entreprise/55%2F20", "accept": "application/json" },
+      "b": { "methode": "GET", "chemin": "/v1/entreprise/55/20", "accept": "application/json" },
+      "meme": false
+    },
+    {
+      "titre": "les paires dans un autre ordre",
+      "a": { "methode": "GET", "chemin": "/v1/eu/recherche?q=Hermes&pays=FR", "accept": "application/json" },
+      "b": { "methode": "GET", "chemin": "/v1/eu/recherche?pays=FR&q=Hermes", "accept": "application/json" },
+      "meme": false
+    },
+    {
+      "titre": "un paramètre vide n'est pas un paramètre absent",
+      "a": { "methode": "GET", "chemin": "/v1/surveillance/creer?cibles=552032534&email=", "accept": "application/json" },
+      "b": { "methode": "GET", "chemin": "/v1/surveillance/creer?cibles=552032534", "accept": "application/json" },
+      "meme": false
+    },
+    {
+      "titre": "un autre Accept",
+      "a": { "methode": "GET", "chemin": "/v1/entreprise/552032534/briefing", "accept": "text/markdown" },
+      "b": { "methode": "GET", "chemin": "/v1/entreprise/552032534/briefing", "accept": "application/json" },
+      "meme": false
+    },
+    {
+      "titre": "un segment de plus",
+      "a": { "methode": "GET", "chemin": "/v1/entreprise/552032534/gabarit-casse", "accept": "application/json" },
+      "b": { "methode": "GET", "chemin": "/v1/entreprise/552032534", "accept": "application/json" },
+      "meme": false
+    },
+    {
+      "titre": "même nombre de segments, une valeur de segment différente",
+      "a": { "methode": "GET", "chemin": "/v1/entreprise/552032534", "accept": "application/json" },
+      "b": { "methode": "GET", "chemin": "/v1/entreprise/542051180", "accept": "application/json" },
+      "meme": false
+    },
+    {
+      "titre": "mêmes noms de paires dans le même ordre, une valeur de requête différente",
+      "a": { "methode": "GET", "chemin": "/v1/eu/recherche?q=Hermes&pays=FR", "accept": "application/json" },
+      "b": { "methode": "GET", "chemin": "/v1/eu/recherche?q=Hermes&pays=BE", "accept": "application/json" },
+      "meme": false
+    },
+    {
+      "titre": "une autre méthode, le reste égal",
+      "a": { "methode": "GET", "chemin": "/v1/entreprise/552032534", "accept": "application/json" },
+      "b": { "methode": "POST", "chemin": "/v1/entreprise/552032534", "accept": "application/json" },
+      "meme": false
+    }
+  ]
+}
