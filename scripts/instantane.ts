@@ -1,7 +1,8 @@
 /**
- * npm run instantane: reads tools/list from the Sirenic server and rewrites catalogue/instantane.json, the
- * snapshot shipped with the package (served only when the server cannot be reached at startup). Anonymous and
- * free: no key, no wallet, no payment. Run it before each release.
+ * npm run instantane: reads tools/list from the Sirenic server and rewrites catalogue/instantane.json, the snapshot
+ * shipped with the package and the source of the tools it serves (names, descriptions, schemas, call templates).
+ * Anonymous and free: no key, no wallet, no payment. Run it before each release, or when the daily drift workflow opens
+ * an issue; then `npm run tableau`.
  *
  *   SIRENIC_URL=https://api.sirenic.eu npm run instantane
  */

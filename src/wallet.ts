@@ -13,14 +13,33 @@ import { CAP_PER_CALL_VARIABLES, CAP_PER_SESSION_VARIABLES } from "./config.js";
 
 const USDC_DECIMALS = DECIMALS;
 
+/** The only payments this package signs: the `exact` scheme on Base mainnet, in USDC (6 decimals). Any other option of
+ *  a quote (another chain, another token, EURC included: the x402 client signs it only on an explicit opt-in) is never
+ *  signed, nor counted as a price: a cap read in USD only holds for USDC. */
+export const SIGNED_NETWORK = "eip155:8453";
+export const SIGNED_ASSETS: ReadonlyMap<string, string> = new Map([["0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "USDC"]]);
+
+export function isSignedOption(option: unknown): boolean {
+  const o = option as { scheme?: unknown; network?: unknown; asset?: unknown } | null;
+  return (
+    o !== null &&
+    typeof o === "object" &&
+    o.scheme === "exact" &&
+    o.network === SIGNED_NETWORK &&
+    typeof o.asset === "string" &&
+    SIGNED_ASSETS.has(o.asset.toLowerCase())
+  );
+}
+
 /**
- * Copied from sirenic-examples, sdk/typescript/src/client.ts (MIT, same authors): drops every payment option
- * above the cap, in atomic units of a 6-decimal stablecoin.
+ * Adapted from sirenic-examples, sdk/typescript/src/client.ts (MIT, same authors): drops every payment option this
+ * package does not sign (isSignedOption) and every option above the cap, in atomic units of a 6-decimal stablecoin.
  */
 export function pricecapPolicy(maxPriceUsd: number) {
   const maxAtomic = BigInt(Math.round(maxPriceUsd * 10 ** USDC_DECIMALS));
   return (_version: number, requirements: PaymentRequirements[]): PaymentRequirements[] =>
     requirements.filter((r) => {
+      if (!isSignedOption(r)) return false;
       const brut =
         (r as { amount?: string }).amount ??
         (r as { maxAmountRequired?: string }).maxAmountRequired ??
@@ -39,10 +58,11 @@ export function isQuote(value: unknown): value is PaymentRequired {
   return q !== null && typeof q === "object" && typeof q.x402Version === "number" && Array.isArray(q.accepts) && q.accepts.length > 0;
 }
 
-/** The lowest amount among the quote's options (USDC and EURC are quoted at the same figure). */
+/** The lowest amount among the quote's options this package signs (USDC on Base); undefined when there is none. */
 export function quotePrice(quote: PaymentRequired): bigint | undefined {
   let lowest: bigint | undefined;
   for (const option of quote.accepts) {
+    if (!isSignedOption(option)) continue;
     try {
       const amount = BigInt((option as { amount?: string }).amount ?? "");
       if (amount >= 0n && (lowest === undefined || amount < lowest)) lowest = amount;

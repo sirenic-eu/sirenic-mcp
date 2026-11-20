@@ -1,7 +1,7 @@
 /**
- * Source guards: the package writes no file (Glama runs it in a microVM and flags disk writes; letter M7 A), calls
- * no REST route of its own (the paywall stays on the server), opens no local listener (M6 A), and its dependencies
- * are pinned to exact versions.
+ * Source guards: the package writes no file (Glama runs it in a microVM and flags disk writes; letter M7 A), has one
+ * network call for the tools (rest.ts) and writes no route by hand (every request comes from a call template of the
+ * snapshot, decision C), opens no local listener (M6 A), and its dependencies are pinned to exact versions.
  */
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -15,9 +15,10 @@ describe("source guards", () => {
     expect(writes).toEqual([]);
   });
 
-  it("no REST call: the only network path is the MCP client transport (no fetch( in src/)", () => {
-    expect(sources.filter(([, code]) => /\bfetch\(/.test(code)).map(([f]) => f)).toEqual([]);
-    expect(sources.filter(([, code]) => code.includes("/v1/")).map(([f]) => f)).toEqual([]);
+  it("one fetch( in src/, in rest.ts; no route written by hand (the paths come from the snapshot's call templates)", () => {
+    expect(sources.filter(([, code]) => /\bfetch\w*\(/.test(code)).map(([f]) => f)).toEqual(["rest.ts"]);
+    expect([...(sources.find(([f]) => f === "rest.ts")![1].matchAll(/\bfetch\w*\(/g))].length).toBe(1);
+    expect(sources.filter(([, code]) => /\/v1\/[A-Za-z{]/.test(code)).map(([f]) => f)).toEqual([]);
   });
 
   it("no local listener (letter M6 A: stdio only, an HTTP port with a wallet behind it would be reachable by any local process)", () => {

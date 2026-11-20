@@ -1,7 +1,9 @@
 /**
- * The local MCP server (stdio side): it lists the Sirenic catalogue and forwards each call to the Sirenic
- * server. The paywall stays on the server: the package never calls a REST route, never builds a quote, and only
- * signs a quote the server returned, under the caps.
+ * The local MCP server (stdio side). Its tools are defined in this repository (catalogue/instantane.json, catalogue.ts);
+ * each call reads its arguments through the tool's input schema (arguments.ts), turns them into a request by the tool's
+ * call template (the shared analyser, appel-outil.ts) and calls the Sirenic REST API itself (rest.ts), which is the
+ * paywall: the package never builds a quote and never knows a price it would apply. It pays with the API key, or signs
+ * the quote the API returned with the local wallet, under the caps, and sends the same request again with the signature.
  */
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
@@ -12,108 +14,56 @@ import {
   type CallToolResult,
 } from "@modelcontextprotocol/sdk/types.js";
 import type { PaymentRequired } from "@x402/core/types";
-import { toLocalTool, withoutPaymentArguments, type Catalogue } from "./catalogue.js";
+import { englishReason } from "./analyser-reasons.js";
+import { requeteDeLOutil } from "./appel-outil.js";
+import { readArguments } from "./arguments.js";
+import { catalogueFromSnapshot, refreshCatalogue, withoutPaymentArguments, type Catalogue, type ServedTool } from "./catalogue.js";
 import type { Config } from "./config.js";
 import { packageError } from "./errors.js";
 import { formatUsd } from "./money.js";
-import { classifyFailure, type RemoteServer, type TransportFailure } from "./remote.js";
+import type { RemoteServer } from "./remote.js";
+import { apiErrorCode, InvariantError, jsonOf, quoteBody, quoteOf, receiptOf, renderAnswer, type ApiAnswer, type SirenicApi } from "./rest.js";
 import { readSnapshot, type Snapshot } from "./snapshot.js";
 import { PACKAGE_VERSION } from "./version.js";
-import { isQuote, quotePrice, Wallet } from "./wallet.js";
+import { quotePrice, Wallet, type Reservation } from "./wallet.js";
 
 export interface SirenicServerOptions {
   config: Config;
-  remote: RemoteServer;
+  /** The REST API the tools call. */
+  api: SirenicApi;
+  /** The hosted tool list, read at startup to bring the list up to date; none: the snapshot alone. */
+  remote?: RemoteServer;
   /** Injected in tests; the shipped snapshot otherwise. */
   snapshot?: () => Snapshot;
   /** Startup and incident lines, for stderr. Never a secret. */
   log?: (line: string) => void;
 }
 
-/** A key the server refused at startup: final for the life of the process (restart with a valid key). */
-type KeyState = "cle_invalide" | "compte_inactif" | undefined;
-
-function snapshotCatalogue(snapshot: Snapshot): Catalogue {
-  return {
-    tools: snapshot.tools.map(toLocalTool),
-    source: "snapshot",
-    snapshotDate: snapshot.generated_at,
-    serverVersion: snapshot.server.version,
-    ...(snapshot.instructions ? { instructions: snapshot.instructions } : {}),
-  };
-}
-
-/** What the client is told when the list comes from the snapshot: why, and what every call will answer. */
-function instructionsFor(catalogue: Catalogue, keyState: KeyState): string {
-  const parts = [catalogue.instructions ?? ""];
-  if (catalogue.source === "snapshot") {
-    const date = catalogue.snapshotDate ?? "unknown date";
-    parts.push(
-      keyState === "cle_invalide"
-        ? `Tool list served from the snapshot of ${date}: the Sirenic server refused SIRENIC_API_KEY (401) when this server started, and every call answers cle_invalide until it is restarted with a valid key.`
-        : keyState === "compte_inactif"
-          ? `Tool list served from the snapshot of ${date}: the Sirenic account of SIRENIC_API_KEY is suspended or closed (403), and every call answers compte_inactif.`
-          : `Tool list served from the snapshot of ${date}: the Sirenic server could not be reached when this server started, and calls are refused until it answers.`,
-    );
-  }
-  return parts.filter((p) => p !== "").join(" ");
-}
-
-/** A key the server refuses (401, 403) on the key rail: final for the life of the process. */
-function refusedKey(config: Config, failure: TransportFailure): KeyState {
-  if (config.rail !== "key" || failure.kind !== "http") return undefined;
-  return failure.status === 401 ? "cle_invalide" : failure.status === 403 ? "compte_inactif" : undefined;
-}
-
-function failureText(failure: TransportFailure): string {
-  switch (failure.kind) {
-    case "http":
-      return `HTTP ${failure.status}`;
-    case "timeout":
-      return "timeout";
-    case "network":
-      return `network error (${failure.detail})`;
-    case "protocol":
-      return `protocol error (${failure.detail})`;
-  }
-}
-
-/** The quote a tool result carries, when the server answered with one (`structuredContent.quote`). */
-function quoteOf(result: CallToolResult): PaymentRequired | undefined {
-  const s = result.structuredContent as { payment_required?: unknown; quote?: unknown } | undefined;
-  return s?.payment_required === true && isQuote(s.quote) ? s.quote : undefined;
-}
-
-/** The free key offer of the quote, as the server sent it (`free_tier`): its own summary, whether it covers this route. */
-function freeTier(result: CallToolResult): { summary?: string; thisRoute?: boolean; signup?: string } {
-  const offer = (result.structuredContent as { free_tier?: { summary?: unknown; this_route?: unknown; signup_url?: unknown } } | undefined)?.free_tier;
-  return {
-    ...(typeof offer?.summary === "string" ? { summary: offer.summary } : {}),
-    ...(typeof offer?.this_route === "boolean" ? { thisRoute: offer.this_route } : {}),
-    ...(typeof offer?.signup_url === "string" ? { signup: offer.signup_url } : {}),
-  };
-}
+/** The facilitator's reason for an EIP-3009 authorization already used on chain: it may have settled a payment. */
+const AUTHORIZATION_ALREADY_USED = "invalid_exact_evm_nonce_already_used";
 
 /**
- * A quote with no rail to pay it: the quote and the free key offer, as the server sent them, and how to pay. The
- * server's own sentence on the free tier leads (it says whether this route is in it); the package never calls a key
- * free for a route the server prices above the free tier.
+ * A quote with no rail to pay it: the quote and the free key offer, as the API sent them, and how to pay. The API's own
+ * sentence on the free tier leads (it says whether this route is in it); the package never calls a key free for a route
+ * the API prices above the free tier.
  */
-function paymentRequired(result: CallToolResult, quote: PaymentRequired, walletIgnored: boolean): CallToolResult {
+function paymentRequired(answer: ApiAnswer, quote: PaymentRequired, config: Config): CallToolResult {
   const price = quotePrice(quote);
   const priceText = price !== undefined ? formatUsd(price) : "the quoted amount";
-  const offer = freeTier(result);
+  const { freeTier, pricingNote } = quoteBody(answer);
+  const summary = typeof freeTier?.summary === "string" ? freeTier.summary : undefined;
+  const signup = typeof freeTier?.signup_url === "string" ? freeTier.signup_url : undefined;
   const key =
-    offer.thisRoute === false
+    freeTier?.this_route === false
       ? "an API key, which pays this route from prepaid credits"
-      : `an API key${offer.summary === undefined && offer.signup ? `: ${offer.signup}` : ""}`;
+      : `an API key${summary === undefined && signup ? `: ${signup}` : ""}`;
   const hint =
     `paiement_requis: this tool costs ${priceText} per call. ` +
-    (walletIgnored
-      ? "The API key did not cover this call and the wallet is never used when SIRENIC_API_KEY is set."
-      : `${offer.summary ? `${offer.summary} ` : ""}To pay, set SIRENIC_API_KEY (${key}) or SIRENIC_WALLET_KEY (an x402 wallet, USDC on Base) in this MCP server's environment, then restart it.`);
-  const s = result.structuredContent as Record<string, unknown>;
-  const structured = { payment_required: true, hint, quote, ...(s.free_tier ? { free_tier: s.free_tier } : {}) };
+    (config.rail === "key"
+      ? `The API key did not cover this call${config.walletKey !== undefined ? " and the wallet is never used when SIRENIC_API_KEY is set" : ""}.`
+      : `${summary ? `${summary} ` : ""}To pay, set SIRENIC_API_KEY (${key}) or SIRENIC_WALLET_KEY (an x402 wallet, USDC on Base) in this MCP server's environment, then restart it.`) +
+    (pricingNote ? ` ${pricingNote}` : "");
+  const structured = { payment_required: true, hint, quote, ...(freeTier ? { free_tier: freeTier } : {}) };
   return {
     content: [{ type: "text", text: JSON.stringify({ error: "paiement_requis", price_usd: priceText, ...structured }, null, 2) }],
     structuredContent: structured,
@@ -121,54 +71,78 @@ function paymentRequired(result: CallToolResult, quote: PaymentRequired, walletI
   };
 }
 
+function withReceipt(result: CallToolResult, answer: ApiAnswer): CallToolResult {
+  const receipt = receiptOf(answer);
+  return receipt === undefined ? result : { ...result, _meta: { ...(result._meta ?? {}), "x402/payment-response": receipt } };
+}
+
+/**
+ * The settlement outcome of a 402 the API served after a signed payment (`reglement_refuse`, `reglement_indetermine`),
+ * read as the hosted server reads it: a refusal counts as one only when its body is consistent (`settlement.outcome`
+ * "refuse" and a list of attempts); a body that names a settlement code but is otherwise inconsistent is undetermined.
+ */
+function settlementOf(answer: ApiAnswer): { outcome: "refuse" | "indetermine"; transaction?: string } | undefined {
+  const body = jsonOf(answer);
+  if (!body.ok || body.value === null || typeof body.value !== "object") return undefined;
+  const { error, settlement } = body.value as { error?: unknown; settlement?: { outcome?: unknown; transaction?: unknown; attempts?: unknown } };
+  if (error !== "reglement_indetermine" && error !== "reglement_refuse") return undefined;
+  const transaction = typeof settlement?.transaction === "string" ? settlement.transaction : undefined;
+  const refused = error === "reglement_refuse" && settlement?.outcome === "refuse" && Array.isArray(settlement.attempts);
+  return { outcome: refused ? "refuse" : "indetermine", ...(transaction ? { transaction } : {}) };
+}
+
+function uncertain(price: bigint, why: string, details: Record<string, unknown> = {}): CallToolResult {
+  return packageError(
+    "reglement_incertain",
+    `${why} The payment may have been settled: it counts against the session cap and nothing was replayed. Check the wallet's USDC balance (and the transaction, when there is one) before retrying.`,
+    { price_usd: formatUsd(price), ...details },
+  );
+}
+
+function cancelled(): CallToolResult {
+  return packageError("appel_annule", "The call was cancelled by the client before any signed payment was sent: nothing was paid.");
+}
+
 export class SirenicServer {
   readonly server: Server;
-  private catalogue: Catalogue;
   private readonly wallet: Wallet | undefined;
-  private keyState: KeyState;
 
   private constructor(
     private readonly options: SirenicServerOptions,
-    catalogue: Catalogue,
-    keyState: KeyState,
+    private readonly catalogue: Catalogue,
   ) {
-    this.catalogue = catalogue;
-    this.keyState = keyState;
     const { config } = options;
     this.wallet = config.rail === "wallet" && config.walletKey ? new Wallet(config.walletKey, config.maxPerCall, config.maxPerSession) : undefined;
     this.server = new Server(
       { name: "sirenic", title: "Sirenic", version: PACKAGE_VERSION },
-      { capabilities: { tools: { listChanged: true } }, instructions: instructionsFor(catalogue, keyState) },
+      { capabilities: { tools: {} }, ...(catalogue.instructions ? { instructions: catalogue.instructions } : {}) },
     );
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: this.catalogue.tools }));
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => this.call(request.params.name, request.params.arguments));
+    this.server.setRequestHandler(CallToolRequestSchema, async (request, extra) =>
+      this.call(request.params.name, request.params.arguments, extra.signal),
+    );
   }
 
-  /** Reads the catalogue from the server (the shipped snapshot if it does not answer) and builds the local server. */
+  /**
+   * Builds the local server: the catalogue from the snapshot, brought up to date from the hosted tool list when it answers
+   * (never a source of calls; without it, the snapshot alone serves and the calls still go to the REST API).
+   */
   static async start(options: SirenicServerOptions): Promise<SirenicServer> {
     const log = options.log ?? (() => undefined);
-    let catalogue: Catalogue;
-    let keyState: KeyState;
-    try {
-      const list = await options.remote.listTools();
-      catalogue = {
-        tools: list.tools.map(toLocalTool),
-        source: "remote",
-        ...(list.instructions ? { instructions: list.instructions } : {}),
-        ...(list.serverVersion ? { serverVersion: list.serverVersion } : {}),
-      };
-    } catch (error) {
-      await options.remote.reset();
-      const failure = classifyFailure(error);
-      keyState = refusedKey(options.config, failure);
-      if (keyState && failure.kind === "http") {
-        log(`SIRENIC_API_KEY refused by the server (${failure.status}): every call will answer ${keyState}; the wallet is never used instead.`);
-      } else {
-        log(`Sirenic server unreachable (${failureText(failure)}): serving the shipped tool list, calls are refused until it answers.`);
+    let catalogue = catalogueFromSnapshot((options.snapshot ?? readSnapshot)());
+    for (const e of catalogue.excluded) log(`tool not served: ${e.name} (${e.reason})`);
+    if (options.remote) {
+      try {
+        const refreshed = refreshCatalogue(catalogue, await options.remote.listTools());
+        catalogue = refreshed.catalogue;
+        for (const note of refreshed.notes) log(note);
+      } catch (error) {
+        log(`tool list not refreshed (${error instanceof Error ? error.message : String(error)}): serving the snapshot of ${catalogue.snapshotDate}.`);
+      } finally {
+        await options.remote.close();
       }
-      catalogue = snapshotCatalogue((options.snapshot ?? readSnapshot)());
     }
-    return new SirenicServer(options, catalogue, keyState);
+    return new SirenicServer(options, catalogue);
   }
 
   get tools(): Catalogue {
@@ -179,83 +153,43 @@ export class SirenicServer {
     return this.wallet?.spent ?? 0n;
   }
 
-  private keyError(state: Exclude<KeyState, undefined>): CallToolResult {
-    return state === "cle_invalide"
-      ? packageError("cle_invalide", "The Sirenic server refused SIRENIC_API_KEY (401). Check the key in your account (https://api.sirenic.eu/compte) and restart this server; the wallet is never used instead.")
-      : packageError("compte_inactif", "The Sirenic account of SIRENIC_API_KEY is suspended or closed (403).");
-  }
-
-  /** A call that did not reach a tool result. `signed`: a payment had been sent (the server may have settled it). */
-  private transportError(failure: TransportFailure, signed: boolean): CallToolResult {
-    if (failure.kind === "http" && failure.status === 429) {
-      return packageError("trop_de_requetes", "The Sirenic server is rate limiting this address (60 MCP requests a minute). Wait a minute, then retry.", {
-        ...(signed ? { payment: "not settled: the request was refused before reaching the tool" } : {}),
-      });
+  async call(name: string, rawArgs: Record<string, unknown> | undefined, signal?: AbortSignal): Promise<CallToolResult> {
+    const entry = this.catalogue.byName.get(name);
+    if (!entry) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
+    const read = readArguments(entry.schema, withoutPaymentArguments(rawArgs));
+    if (!read.ok) return packageError("argument_invalide", `Invalid arguments for tool ${name}: ${read.reason}. Nothing was sent.`);
+    const request = requeteDeLOutil(entry.template, read.value);
+    if ("refus" in request) {
+      return request.refus === "argument_invalide"
+        ? packageError("argument_invalide", `Invalid arguments for tool ${name}: ${englishReason(request.raison)}. Nothing was sent.`)
+        : packageError("gabarit_invalide", `The call template of ${name} gives no request for these arguments (${englishReason(request.raison)}): a fault of Sirenic, not of the caller. Nothing was sent.`);
     }
-    const refused = refusedKey(this.options.config, failure);
-    if (refused) {
-      this.keyState = refused;
-      return this.keyError(refused);
-    }
-    if (signed) {
-      return packageError(
-        "reglement_incertain",
-        `The connection to the Sirenic server broke after the signed payment was sent (${failureText(failure)}). The server may have settled it: nothing was replayed. Check the wallet's USDC balance before retrying.`,
-      );
-    }
-    return packageError("service_injoignable", `The Sirenic server could not be reached (${failureText(failure)}). Nothing was signed.`);
-  }
-
-  /**
-   * In snapshot mode, one attempt to reach the server again, which refreshes the list: nothing when it answers, else
-   * the error the call returns (the key refused, 401 or 403, is an error of the key, not of the network).
-   */
-  private async reconnect(): Promise<CallToolResult | undefined> {
     try {
-      const list = await this.options.remote.listTools();
-      this.catalogue = {
-        tools: list.tools.map(toLocalTool),
-        source: "remote",
-        ...(list.instructions ? { instructions: list.instructions } : {}),
-        ...(list.serverVersion ? { serverVersion: list.serverVersion } : {}),
-      };
-      await this.server.sendToolListChanged().catch(() => undefined);
-      return undefined;
+      return await this.send(name, entry, request.chemin, request.accept, signal);
     } catch (error) {
-      await this.options.remote.reset();
-      const refused = refusedKey(this.options.config, classifyFailure(error));
-      if (refused) {
-        this.keyState = refused;
-        return this.keyError(refused);
+      if (error instanceof InvariantError) {
+        throw new McpError(ErrorCode.InternalError, `Internal error of the package (${error.message}): nothing was sent.`);
       }
-      return packageError("service_injoignable", "The Sirenic server could not be reached: the tool list comes from the shipped snapshot and calls are refused until the server answers. Nothing was signed.");
+      throw error;
     }
   }
 
-  async call(name: string, rawArgs: Record<string, unknown> | undefined): Promise<CallToolResult> {
-    if (!this.catalogue.tools.some((t) => t.name === name)) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${name}`);
-    if (this.keyState) return this.keyError(this.keyState);
-    if (this.catalogue.source === "snapshot") {
-      const unreachable = await this.reconnect();
-      if (unreachable) return unreachable;
-    }
-    const args = withoutPaymentArguments(rawArgs);
-    const { remote, config } = this.options;
+  private async send(name: string, entry: ServedTool, chemin: string, accept: string, signal: AbortSignal | undefined): Promise<CallToolResult> {
+    const { api, config } = this.options;
+    const first = await api.send(chemin, accept, undefined, signal);
+    if (first.kind === "cancelled") return cancelled();
+    if (first.kind === "unreachable") return packageError("service_injoignable", `The Sirenic API could not be reached (${first.detail}). Nothing was signed.`);
+    const quote = quoteOf(first.answer);
+    // Data, or an error of the API (503 amont_indisponible, 401 for a refused key, 402 credits_insuffisants...): as served.
+    if (!quote) return withReceipt(renderAnswer(first.answer, entry.template.rendu, name), first.answer);
+    if (!this.wallet) return paymentRequired(first.answer, quote, config);
 
-    let first: CallToolResult;
-    try {
-      first = await remote.callTool(name, args);
-    } catch (error) {
-      return this.transportError(classifyFailure(error), false);
+    if (quotePrice(quote) === undefined) {
+      return packageError("paiement_refuse", "The quote offers no payment this package signs (the exact scheme in USDC on Base): nothing was signed.");
     }
-    const quote = quoteOf(first);
-    // Data, a server error (503 amont_indisponible, 401 compte_requis, 402 credits_insuffisants...): as the server sent it.
-    if (!quote) return first;
-    if (!this.wallet) return paymentRequired(first, quote, config.rail === "key" && config.walletKey !== undefined);
-
     // The price is reserved against the session cap inside decide(), before the first await below: calls sent together
-    // never pass the same check. The reservation becomes spending on a result or on an uncertain settlement, and is
-    // given back on every other outcome (the finally below covers any path that did not settle it).
+    // never pass the same check. The reservation becomes spending on a result or on an uncertain settlement, and is given
+    // back on every other outcome (the finally below covers any path that did not settle it).
     const decision = this.wallet.decide(quote);
     if (!decision.ok) {
       const priceText = decision.price !== undefined ? formatUsd(decision.price) : "unreadable";
@@ -276,43 +210,82 @@ export class SirenicServer {
 
     const { reservation } = decision;
     try {
+      if (signal?.aborted) return cancelled();
       let signed: { header: string; amount: bigint };
       try {
         signed = await this.wallet.sign(quote, reservation.amount);
       } catch (error) {
         return packageError("paiement_refuse", `The quote could not be signed by the local wallet (${error instanceof Error ? error.message : String(error)}). Nothing was sent.`);
       }
-
-      let paid: CallToolResult;
-      try {
-        paid = await remote.callTool(name, { ...args, x_payment: signed.header });
-      } catch (error) {
-        const failure = classifyFailure(error);
-        // 429: refused before the tool, nothing settled. Anything else after a signed payment: it may have been settled.
-        if (!(failure.kind === "http" && failure.status === 429)) reservation.settle();
-        return this.transportError(failure, true);
+      if (signal?.aborted) return cancelled();
+      const paid = await api.send(chemin, accept, signed.header, signal);
+      // Cancelled before the signed request left: nothing was sent, nothing is counted.
+      if (paid.kind === "cancelled" && !paid.sent) return cancelled();
+      if (paid.kind !== "answer") {
+        reservation.settle();
+        return uncertain(
+          reservation.amount,
+          paid.kind === "cancelled"
+            ? "The call was cancelled by the client while the signed payment was being sent."
+            : `The connection to the Sirenic API broke after the signed payment was sent (${paid.detail}).`,
+        );
       }
-      const again = quoteOf(paid);
-      if (again) {
-        const reason = typeof (again as { error?: unknown }).error === "string" ? ` (${(again as { error: string }).error})` : "";
-        return packageError("paiement_refuse", `The Sirenic server rejected the signed payment${reason}. Nothing was replayed.`, {
-          price_usd: formatUsd(signed.amount),
-        });
-      }
-      // A tool error cancels the payment on the server (nobody pays for a 400, 404 or 503): only a result counts.
-      if (!paid.isError) reservation.settle();
-      return paid;
+      return this.afterPayment(name, entry, paid.answer, reservation);
     } finally {
       reservation.release();
     }
   }
+
+  /** The answer to a signed payment: what it is decides whether the reserved price is spent, given back, or counted as
+   *  possibly settled. */
+  private afterPayment(name: string, entry: ServedTool, answer: ApiAnswer, reservation: Reservation): CallToolResult {
+    const price = reservation.amount;
+    if (answer.status >= 200 && answer.status < 300) {
+      reservation.settle();
+      return withReceipt(renderAnswer(answer, entry.template.rendu, name), answer);
+    }
+    if (answer.status === 402) {
+      // The settlement outcome is read before any quote: a settlement the facilitator could not confirm may have paid.
+      const settlement = settlementOf(answer);
+      if (settlement?.outcome === "indetermine") {
+        reservation.settle();
+        return uncertain(price, "The Sirenic API could not confirm the settlement of the signed payment.", {
+          statut_http: 402,
+          ...(settlement.transaction ? { transaction: settlement.transaction } : {}),
+        });
+      }
+      if (settlement?.outcome === "refuse") {
+        return packageError("paiement_refuse", "The Sirenic API refused the settlement of the signed payment (reglement_refuse): nothing was settled. Nothing was replayed.", {
+          price_usd: formatUsd(price),
+        });
+      }
+      const again = quoteOf(answer);
+      if (again) {
+        const reason = typeof (again as { error?: unknown }).error === "string" ? (again as { error: string }).error : undefined;
+        if (reason === AUTHORIZATION_ALREADY_USED) {
+          reservation.settle();
+          return uncertain(price, `The Sirenic API answered that the signed authorization was already used on chain (${reason}).`, { statut_http: 402 });
+        }
+        return packageError("paiement_refuse", `The Sirenic API rejected the signed payment${reason ? ` (${reason})` : ""}. Nothing was replayed.`, {
+          price_usd: formatUsd(price),
+        });
+      }
+      reservation.settle();
+      return uncertain(price, "The Sirenic API answered the signed payment with a 402 that is neither a quote nor a settlement outcome.", { statut_http: 402 });
+    }
+    // An error of the API cancels the payment (nobody pays for a 400, 404 or 503): as served, nothing counted. Whatever
+    // else answered (a proxy page, a 502 or 504, JSON without a code) does not say what happened to the payment.
+    if (apiErrorCode(answer) !== undefined) return renderAnswer(answer, entry.template.rendu, name);
+    reservation.settle();
+    return uncertain(price, `The answer to the signed payment is not the Sirenic API's (HTTP ${answer.status}).`, { statut_http: answer.status });
+  }
 }
 
-/** Builds the local server for `config`: the remote connection, the catalogue, the rails. */
+/** Builds the local server for `config`. */
 export async function startSirenicServer(
   config: Config,
-  remote: RemoteServer,
-  extra: Omit<SirenicServerOptions, "config" | "remote"> = {},
+  api: SirenicApi,
+  extra: Omit<SirenicServerOptions, "config" | "api"> = {},
 ): Promise<SirenicServer> {
-  return SirenicServer.start({ config, remote, ...extra });
+  return SirenicServer.start({ config, api, ...extra });
 }
