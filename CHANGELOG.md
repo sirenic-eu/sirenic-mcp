@@ -1,11 +1,11 @@
 # Changelog
 
-## 0.2.0 (2026-11-19)
+## 0.2.0 (2026-11-21)
 
 A local server whose tools are defined in this repository and call the Sirenic REST API themselves. 0.1.0 forwarded
 every call to the hosted MCP server.
 
-- The snapshot `catalogue/instantane.json` (119 tools, read from the Sirenic server 1.2.1 on 2026-11-19) is the source
+- The snapshot `catalogue/instantane.json` (119 tools, read from the Sirenic server 1.2.1 on 2026-11-21) is the source
   of the tools served: names, descriptions, input schemas and each tool's call template (`_meta["eu.sirenic/appel"]`).
   A tool that cannot be called the way the hosted server calls it (template out of the closed form, unknown schema
   keyword, schema and template that disagree) is excluded and named at startup.
