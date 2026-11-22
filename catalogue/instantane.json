@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19T17:19:17.448Z",
+  "generated_at": "2026-11-21T08:36:16.718Z",
   "source": "https://api.sirenic.eu/mcp",
   "server": {
     "name": "sirenic",
@@ -25,7 +25,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -122,7 +122,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -216,7 +216,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -310,7 +310,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -404,7 +404,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -498,7 +498,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -597,7 +597,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -706,7 +706,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -804,7 +804,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -898,7 +898,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -992,7 +992,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1091,7 +1091,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1194,7 +1194,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1293,7 +1293,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1390,7 +1390,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1492,7 +1492,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1547,7 +1547,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1641,7 +1641,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1735,7 +1735,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1829,7 +1829,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -1940,7 +1940,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2037,7 +2037,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2131,7 +2131,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2211,7 +2211,7 @@
     {
       "name": "search_european_companies",
       "title": "Search European companies by name",
-      "description": "European company search: company lookup by name across official European company registers, in one unified schema. Local copies, all searched when pays is absent: Belgium, Croatia, Cyprus, Estonia, Ireland, Latvia, Lithuania, Norway, Romania, Sweden, Spain (BORME base, hoja key); live, only with pays set: Czechia, Finland, Slovakia, Switzerland; Poland through GLEIF (no name search at the register); Denmark and the United Kingdom live, only with pays set; plus worldwide GLEIF (LEI) coverage. Each match carries a score_confiance (0-1 match confidence) and a correspondance_nom. Order: match level first, served as correspondance_nom (exacte: the name, the official name in the French search, equals q once the legal forms written for the result's country are removed at either end of both, never the last word, for the countries of the closed list of written legal forms, a GLEIF result from any other country keeping its whole name; mots_entiers: every remaining word of q is a word of the name; ressemblance: the rest, an acronym or other-field hit included; null if q is a SIREN, SIRET or the result's national ID, or no name is served), then an internal ranking score, not score_confiance (European search: score_confiance before its cap at 1 and its rounding; French search: the similarity of the name, usual name and acronym, plus 0.05 for an active company, the name and acronym only in the real-time fallback); ties: by SIREN in the French search, one country in turn in the European search (rank by national ID within each country, then country code). nombre_resultats counts every servable result the registers returned (tronque: true beyond the 10 served, note_troncature when it is a lower bound). Czechia, Estonia, Norway, Latvia and Slovakia serve legal persons only: a sole trader (in Estonia, a sole proprietorship, FIE; in Norway, a sole proprietorship, ENK, a registered individual or an estate; in Latvia, an individual merchant, IK, or an individual, family, farm or fishery enterprise; in Slovakia, any entity of the trade register, and one of the commercial register) or a form not recognised as a legal person is left out, and in Norway so is a foreign branch or entity, NUF or UTLA, whose name does not end with a written legal-person form valid in its home country (followed at most by branch words), or recorded there as a sole proprietorship; Croatia too (a trgovac pojedinac, t.p., or an undecided form); in Denmark, a sole proprietorship (ENK), a personally owned small business (PMV), an estate (DØD) or an undecided CVR form; in Lithuania, an individual enterprise (individuali įmonė, IĮ), its branch (individualios įmonės filialas) or representative office (individualios įmonės atstovybė), or an undecided form; in Sweden, a sole proprietorship (enskild näringsverksamhet) or an undecided form; in Romania, an authorised natural person or an individual or family enterprise (PFA, II, IF, PF, AF), never loaded, or an undecided form; in Finland, Ireland and the United Kingdom, a form outside the register's published nomenclature; in Belgium, an entity without legal form or of a form off the whitelist, and in Spain, the hoja of a sole trader (a BORME empresario individual act) or one whose name carries no company legal form from the closed Spanish list, are left out; in Switzerland, a sole proprietorship (Einzelunternehmen, whose name carries the owner's name), a branch (the search does not know its head office) or an undecided legal form is left out; in every country, a GLEIF LEI of a natural person (sole proprietor category or natural-person legal form) or of an ambiguous legal form is left out too, its legal form written as free text included; a GLEIF LEI (general or branch) of a country with a local copy is served only when that copy knows and serves its number, a branch under the country of its legal address; all are counted by reason in ecartes, never named, except where a local copy keeps such an entity nameless: neither matched nor counted, ecartes_non_mesures (LV, Latvia; NO, Norway) says so; and except what a register's own request leaves out (ARES is asked for legal persons only, GLEIF for its servable categories, without the sole proprietor one): neither read nor counted, ecartes_filtres_amont says so. A search Zefix or ARES refuses as too broad returns requete_trop_large, not charged: refine the name; a register or database outage returns 503 with the code naming it (amont_indisponible, base_indisponible), never charged. Spanish matches return the hoja registral to use with get_spanish_company_acts. Paid via x402 ($0.003 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
+      "description": "European company search: company lookup by name across official European company registers, in one unified schema. Local copies, all searched when pays is absent: Belgium, Croatia, Cyprus, Estonia, Ireland, Latvia, Lithuania, Norway, Romania, Sweden, Spain (BORME base, hoja key); live, only with pays set: Czechia, Finland, Slovakia, Switzerland; Poland through GLEIF (no name search at the register); Denmark and the United Kingdom live, only with pays set; plus worldwide GLEIF (LEI) coverage. Each match carries a score_confiance (0-1 match confidence) and a correspondance_nom. Order: match level first, served as correspondance_nom (exacte: the name, the official name in the French search, equals q once the legal forms written for the result's country are removed at either end of both, never the last word, for the countries of the closed list of written legal forms, a GLEIF result from any other country keeping its whole name; mots_entiers: every remaining word of q is a word of the name; ressemblance: the rest, an acronym or other-field hit included; null if q is a SIREN, SIRET or the result's national ID, or no name is served), then an internal ranking score, not score_confiance (European search: score_confiance before its cap at 1 and its rounding; French search: the similarity of the name, usual name and acronym, plus 0.05 for an active company, the name and acronym only in the real-time fallback); ties: by SIREN in the French search, one country in turn in the European search (rank by national ID within each country, then country code). nombre_resultats counts every servable result the registers returned (tronque: true beyond the 10 served, note_troncature when it is a lower bound). Czechia, Estonia, Latvia, Norway and Slovakia serve legal persons only: a sole trader (in Estonia, a sole proprietorship, FIE; in Latvia, an individual merchant, IK, or an individual, family, farm or fishery enterprise; in Norway, a sole proprietorship, ENK, a registered individual or an estate; in Slovakia, any entity of the trade register, and one of the commercial register) or a form not recognised as a legal person is left out, and in Norway so is a foreign branch or entity, NUF or UTLA, whose name does not end with a written legal-person form valid in its home country (followed at most by branch words), or recorded there as a sole proprietorship; Croatia too (a trgovac pojedinac, t.p., or an undecided form); in Denmark, a sole proprietorship (ENK), a personally owned small business (PMV), an estate (DØD) or an undecided CVR form; in Lithuania, an individual enterprise (individuali įmonė, IĮ), its branch (individualios įmonės filialas) or representative office (individualios įmonės atstovybė), or an undecided form; in Sweden, a sole proprietorship (enskild näringsverksamhet) or an undecided form; in Romania, an authorised natural person or an individual or family enterprise (PFA, II, IF, PF, AF), never loaded, or an undecided form; in Finland, Ireland and the United Kingdom, a form outside the register's published nomenclature; in Belgium, an entity without legal form or of a form off the whitelist, and in Spain, the hoja of a sole trader (a BORME empresario individual act) or one whose name carries no company legal form from the closed Spanish list, are left out; in Switzerland, a sole proprietorship (Einzelunternehmen, whose name carries the owner's name), a branch (the search does not know its head office) or an undecided legal form is left out; in every country, a GLEIF LEI of a natural person (sole proprietor category or natural-person legal form) or of an ambiguous legal form is left out too, its legal form written as free text included; a GLEIF LEI (general or branch) of a country with a local copy is served only when that copy knows and serves its number, a branch under the country of its legal address; all are counted by reason in ecartes, never named, except where a local copy keeps such an entity nameless: neither matched nor counted, ecartes_non_mesures (LV, Latvia; NO, Norway) says so; and except what a register's own request leaves out (ARES is asked for legal persons only, GLEIF for its servable categories, without the sole proprietor one): neither read nor counted, ecartes_filtres_amont says so. A search Zefix or ARES refuses as too broad returns requete_trop_large, not charged: refine the name; a register or database outage returns 503 with the code naming it (amont_indisponible, base_indisponible), never charged. Spanish matches return the hoja registral to use with get_spanish_company_acts. Paid via x402 ($0.003 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2231,7 +2231,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2315,7 +2315,7 @@
     {
       "name": "get_european_company_eu_procurement",
       "title": "European company EU procurement awards (TED)",
-      "description": "European public-procurement contract awards won by a company from Latvia (LV), Norway (NO), Belgium (BE), Denmark (DK), Finland (FI), Sweden (SE), Czechia (CZ), Slovakia (SK), Estonia (EE) or Lithuania (LT), from TED (Tenders Electronic Daily, EU Publications Office): award notices matched by the NATIONAL identifier in every form it takes on TED (`variantes_identifiant`): buyer, country, subject, notice-level amount, CPV codes, official TED link, co-winners proven legal persons (other names and IDs counted by reason, never named). Depending on the country, 40 to 94% of award notices carry a readable winner identifier (measured 2026-09-17): `nombre_avis: 0` is a NON-conclusive absence. Czechia, Denmark, Estonia, Lithuania, Latvia, Norway, Sweden and Slovakia: legal persons only, a sole trader's IČO, a Danish sole proprietorship (enkeltmandsvirksomhed, read on the CVR profile), an Estonian sole proprietorship (FIE), a Latvian individual merchant (IK), a Norwegian sole proprietorship (ENK), a Swedish sole proprietorship (enskild näringsverksamhet) or a form not recognised as a legal person returns 404, not billed; in Lithuania, an individual enterprise (individuali įmonė, IĮ), its branch (individualios įmonės filialas) or representative office (individualios įmonės atstovybė), or an undecided form returns 404 as well. So does a Belgian entity without legal form or of a form off the whitelist, or a Finnish form off the YRMU codebook. France has get_french_company_eu_procurement, the UK get_uk_company_public_procurement. Live TED query, cached 24 h. Paid via x402 ($0.02 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
+      "description": "European public-procurement contract awards won by a company from Latvia (LV), Norway (NO), Belgium (BE), Denmark (DK), Finland (FI), Sweden (SE), Czechia (CZ), Slovakia (SK), Estonia (EE) or Lithuania (LT), from TED (Tenders Electronic Daily, EU Publications Office): award notices matched by the NATIONAL identifier in every form it takes on TED (`variantes_identifiant`): buyer, country, subject, notice-level amount, CPV codes, official TED link, co-winners proven legal persons (other names and IDs counted by reason, never named). Depending on the country, 40 to 94% of award notices carry a readable winner identifier (measured 2026-09-17): `nombre_avis: 0` is a NON-conclusive absence. Czechia, Denmark, Estonia, Lithuania, Latvia, Norway, Sweden and Slovakia: legal persons only; returns 404, not billed: in Czechia, a sole trader's or other natural person's IČO (the majority of Czech identifiers) or a form not recognised as a legal person; in Denmark, a sole proprietorship (ENK), a personally owned small business (PMV), an estate (DØD) or an undecided CVR form; in Estonia, a sole proprietorship (FIE) or a form not recognised as a legal person; in Lithuania, an individual enterprise (individuali įmonė, IĮ), its branch (individualios įmonės filialas) or representative office (individualios įmonės atstovybė), or an undecided form; in Latvia, an individual merchant (IK), an individual (IND), family (GIM), farm (ZEM) or fishery (ZVJ) enterprise, or an unrecognised legal form; in Norway, a sole proprietorship (ENK), a registered individual (PERS, TVAM), an estate (KBO, BO), a foreign branch or entity (NUF, UTLA) whose name does not end with a written legal-person form valid in its home country (followed at most by branch words), or recorded there as a sole proprietorship, or a form not recognised as a legal person; in Sweden, a sole proprietorship (enskild näringsverksamhet) or an undecided form; in Slovakia, an entity of the trade register, a sole trader of the commercial register or a form not recognised as a legal person. So does a Belgian entity without legal form or of a form off the whitelist, or a Finnish form off the YRMU codebook. France has get_french_company_eu_procurement, the UK get_uk_company_public_procurement. Live TED query, cached 24 h. Paid via x402 ($0.02 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2334,7 +2334,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2415,7 +2415,7 @@
     {
       "name": "get_european_company_profile",
       "title": "European company profile",
-      "description": "European company registry lookup: unified European company profile by country and national register ID, same JSON schema for every country (identity, legal form, normalized status, head office, VAT, LEI, official register link). National registers from local copies: Belgium, Croatia, Cyprus, Estonia, Ireland, Latvia, Lithuania, Norway, Romania, Sweden; live: Czechia, Finland, Poland, Slovakia, Switzerland; Denmark and the United Kingdom live through this profile; elsewhere via GLEIF (LEI). Poland (KRS): the status reads the proceedings entered in the register extract (bankruptcy, liquidation, restructuring, suspended activity: autre, the procedure in Polish and its date in statut_detail, e.g. upadłość 2024-12-19) and the strike-off (cesse, wykreślenie and its date); a proceeding not yet entered in the register is not seen. Country blocks: Belgium, NACEBEL activities and establishment units; Croatia, registre_hr; Cyprus, registre_cy (type, sub-type, dated register status family, registered office, mandates count; HE/AE numbers, legal persons only); Estonia, registre_ee and gages_commerciaux; Finland, registres_fi; Ireland, registre_ie; Latvia, succursale_etrangere (a struck-off foreign merchant's branch: the record seen before striking off is kept when its parent is proven a legal person, number, register and subscribed capital published, no natural-person mark, and served with retiree_de_la_publication_le under partial coverage; otherwise null, named in blocs_absents, reason radiation_inscriptions_retirees); Lithuania, registre_lt and fiscalite_lt (capital, VAT, filing compliance, shareholder headcounts, tax arrears); Norway, unites_locales; Romania, registre_ro (every registration of the CUI, status codes in closed families, registered office, EU branches, mandates count; legal persons only). Croatia, Czechia, Estonia, Norway, Latvia and Slovakia serve legal persons only, and Belgium its whitelist of forms with legal personality: a Belgian entity without legal form or of a form without legal personality, a Croatian sole trader (trgovac pojedinac) or undecided form, a sole trader's IČO, an Estonian sole proprietorship (FIE), a Norwegian sole proprietorship (ENK), registered individual (PERS, TVAM), estate (KBO, BO) or a foreign branch or entity (NUF, UTLA) whose name does not end with a written legal-person form valid in its home country (followed at most by branch words), or recorded there as a sole proprietorship, a Latvian individual merchant (IK) or individual, family, farm or fishery enterprise, an establishment bearing a Latvian or foreign natural-person trader mark (e.K., FIE, toiminimi, sole trader…), or a form not recognised as a legal person returns 404, not billed. A Swiss sole proprietorship (Einzelunternehmen), a Swiss branch whose head office is not served or an undecided legal form returns 404 as well, not billed. So do, in Denmark (CVR), a sole proprietorship (ENK), a personally owned small business (PMV), an estate (DØD) or an undecided CVR form; in Lithuania, an individual enterprise (individuali įmonė, IĮ), its branch (individualios įmonės filialas) or representative office (individualios įmonės atstovybė), or an undecided form; in Sweden, a sole proprietorship (enskild näringsverksamhet) or an undecided form; in Romania, an authorised natural person or an individual or family enterprise (PFA, II, IF, PF, AF), never loaded, or an undecided form; and, in Finland, Ireland, Poland and the United Kingdom, a form outside the register's published nomenclature (a foreign trader's branch included). Through GLEIF, a LEI that GLEIF flags as a natural person (sole proprietor category or natural-person legal form) or of an ambiguous legal form returns 404, not billed, the same way; a LEI without ELF code is judged by its written legal form (never served), and a LEI requested under another country than its own (its jurisdiction; for a branch, its legal address) returns 404 pays_ne_correspond_pas, not billed (never served under DE or NL). For LEI holders the profile carries groupe_lei: the GLEIF level-2 group, that is the direct and ultimate CONSOLIDATING parents (named, except a parent that GLEIF flags as a natural person or of an ambiguous legal form: mere_omise gives the reason, no name, no LEI; non_servie, a neutral value, when another reason leaves it out) or the declared reason for having none (accounting consolidation, never capital ownership or beneficial owners; sans_objet without a LEI). Belgian, Croatian, Cypriot, Czech, Danish, Finnish, Latvian, Lithuanian, Norwegian, Romanian, Swedish and Swiss profiles also carry financements_ue: Horizon 2020 / Horizon Europe projects from CORDIS matched by the published VAT number (sans_objet elsewhere). No default-risk score is computed for this country yet: the response carries score_defaillance (statut non_evaluable, closed-list reasons explained by GET /v1/lecture); never read it as a low score. Paid via x402 ($0.01 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
+      "description": "European company registry lookup: unified European company profile by country and national register ID, same JSON schema for every country (identity, legal form, normalized status, head office, VAT, LEI, official register link). National registers from local copies: Belgium, Croatia, Cyprus, Estonia, Ireland, Latvia, Lithuania, Norway, Romania, Sweden; live: Czechia, Finland, Poland, Slovakia, Switzerland; Denmark and the United Kingdom live through this profile; elsewhere via GLEIF (LEI). Poland (KRS): the status reads the proceedings entered in the register extract (bankruptcy, liquidation, restructuring, suspended activity: autre, the procedure in Polish and its date in statut_detail, e.g. upadłość 2024-12-19) and the strike-off (cesse, wykreślenie and its date); a proceeding not yet entered in the register is not seen. Country blocks: Belgium, NACEBEL activities and establishment units; Croatia, registre_hr; Cyprus, registre_cy (type, sub-type, dated register status family, registered office, mandates count; HE/AE numbers, legal persons only); Estonia, registre_ee and gages_commerciaux; Finland, registres_fi; Ireland, registre_ie; Latvia, succursale_etrangere (a struck-off foreign merchant's branch: the record seen before striking off is kept when its parent is proven a legal person, number, register and subscribed capital published, no natural-person mark, and served with retiree_de_la_publication_le under partial coverage; otherwise null, named in blocs_absents, reason radiation_inscriptions_retirees); Lithuania, registre_lt and fiscalite_lt (capital, VAT, filing compliance, shareholder headcounts, tax arrears); Norway, unites_locales; Romania, registre_ro (every registration of the CUI, status codes in closed families, registered office, EU branches, mandates count; legal persons only). Croatia, Czechia, Estonia, Latvia, Norway and Slovakia serve legal persons only, and Belgium its whitelist of forms with legal personality: a Belgian entity without legal form or of a form without legal personality, a Croatian sole trader (trgovac pojedinac) or undecided form, a sole trader's IČO, an Estonian sole proprietorship (FIE), a Latvian individual merchant (IK) or individual, family, farm or fishery enterprise, an establishment bearing a Latvian or foreign natural-person trader mark (e.K., FIE, toiminimi, sole trader…), a Norwegian sole proprietorship (ENK), registered individual (PERS, TVAM), estate (KBO, BO) or a foreign branch or entity (NUF, UTLA) whose name does not end with a written legal-person form valid in its home country (followed at most by branch words), or recorded there as a sole proprietorship, or a form not recognised as a legal person returns 404, not billed. A Swiss sole proprietorship (Einzelunternehmen), a Swiss branch whose head office is not served or an undecided legal form returns 404 as well, not billed. So do, in Denmark (CVR), a sole proprietorship (ENK), a personally owned small business (PMV), an estate (DØD) or an undecided CVR form; in Lithuania, an individual enterprise (individuali įmonė, IĮ), its branch (individualios įmonės filialas) or representative office (individualios įmonės atstovybė), or an undecided form; in Sweden, a sole proprietorship (enskild näringsverksamhet) or an undecided form; in Romania, an authorised natural person or an individual or family enterprise (PFA, II, IF, PF, AF), never loaded, or an undecided form; and, in Finland, Ireland, Poland and the United Kingdom, a form outside the register's published nomenclature (a foreign trader's branch included). Through GLEIF, a LEI that GLEIF flags as a natural person (sole proprietor category or natural-person legal form) or of an ambiguous legal form returns 404, not billed, the same way; a LEI without ELF code is judged by its written legal form (never served), and a LEI requested under another country than its own (its jurisdiction; for a branch, its legal address) returns 404 pays_ne_correspond_pas, not billed (never served under DE or NL). For LEI holders the profile carries groupe_lei: the GLEIF level-2 group, that is the direct and ultimate CONSOLIDATING parents (named, except a parent that GLEIF flags as a natural person or of an ambiguous legal form: mere_omise gives the reason, no name, no LEI; non_servie, a neutral value, when another reason leaves it out) or the declared reason for having none (accounting consolidation, never capital ownership or beneficial owners; sans_objet without a LEI). Belgian, Croatian, Cypriot, Czech, Danish, Finnish, Latvian, Lithuanian, Norwegian, Romanian, Swedish and Swiss profiles also carry financements_ue: Horizon 2020 / Horizon Europe projects from CORDIS matched by the published VAT number (sans_objet elsewhere). No default-risk score is computed for this country yet: the response carries score_defaillance (statut non_evaluable, closed-list reasons explained by GET /v1/lecture); never read it as a low score. Paid via x402 ($0.01 in USDC or EURC). When you report a result, cite its `citation` verbatim.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2426,15 +2426,15 @@
           },
           "id": {
             "type": "string",
-            "pattern": "^[A-Za-z0-9.-]{1,20}$",
-            "description": "National register identifier, e.g. 923609016"
+            "pattern": "^[A-Za-z0-9. -]{1,24}$",
+            "description": "National register identifier, e.g. 923609016. Spaces, the VAT form and up to 24 characters only for Belgium, Czechia, Denmark, Finland, Latvia, Norway and Switzerland; elsewhere letters, digits, dots and hyphens, up to 20 (400 otherwise, not billed)"
           },
           "x_payment": {
             "description": "Optional signed x402 PAYMENT-SIGNATURE header value. Omit to receive the payment quote.",
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2619,7 +2619,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2713,7 +2713,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2811,7 +2811,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -2908,7 +2908,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3002,7 +3002,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3101,7 +3101,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3154,7 +3154,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3253,7 +3253,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3348,7 +3348,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3442,7 +3442,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3540,7 +3540,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3637,7 +3637,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3731,7 +3731,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3825,7 +3825,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -3919,7 +3919,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4018,7 +4018,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4120,7 +4120,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4217,7 +4217,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4328,7 +4328,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4427,7 +4427,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4526,7 +4526,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4621,7 +4621,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4715,7 +4715,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4809,7 +4809,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4903,7 +4903,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -4997,7 +4997,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5091,7 +5091,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5185,7 +5185,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5279,7 +5279,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5373,7 +5373,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5467,7 +5467,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5561,7 +5561,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5655,7 +5655,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5749,7 +5749,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5843,7 +5843,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -5937,7 +5937,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6031,7 +6031,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6125,7 +6125,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6219,7 +6219,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6313,7 +6313,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6407,7 +6407,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6501,7 +6501,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6595,7 +6595,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6689,7 +6689,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6783,7 +6783,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6877,7 +6877,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -6971,7 +6971,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7065,7 +7065,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7159,7 +7159,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7253,7 +7253,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7347,7 +7347,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7441,7 +7441,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7535,7 +7535,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7629,7 +7629,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7732,7 +7732,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7829,7 +7829,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7881,7 +7881,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -7983,7 +7983,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -8087,7 +8087,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -8414,7 +8414,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -8533,7 +8533,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -8632,7 +8632,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -8726,7 +8726,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -8833,7 +8833,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -8943,7 +8943,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9053,7 +9053,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9156,7 +9156,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9268,7 +9268,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9373,7 +9373,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9475,7 +9475,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9572,7 +9572,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9667,7 +9667,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9781,7 +9781,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9882,7 +9882,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -9976,7 +9976,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -10070,7 +10070,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -10170,7 +10170,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -10280,7 +10280,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -10380,7 +10380,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -10487,7 +10487,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -10593,7 +10593,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -10902,7 +10902,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -11111,7 +11111,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -11304,7 +11304,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -11398,7 +11398,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -11492,7 +11492,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -11592,7 +11592,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -11693,7 +11693,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
@@ -11791,7 +11791,7 @@
             "type": "string"
           },
           "api_key": {
-            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote.",
+            "description": "Optional Sirenic API key (srn_live_…) to pay with prepaid credits instead of x402, with no wallet needed. Get one at https://api.sirenic.eu/compte?utm_source=api&utm_campaign=mcp. Ignored when x_payment is provided (the signed payment wins). On insufficient balance the tool returns a credits error, not an x402 quote. Each key has a daily spending cap (Paris time, 100 EUR unless set from 1 to 2000 EUR in the account): a call that would exceed it returns the plafond_cle_atteint error (HTTP 429), nothing charged, until midnight Paris time.",
             "type": "string"
           }
         },
